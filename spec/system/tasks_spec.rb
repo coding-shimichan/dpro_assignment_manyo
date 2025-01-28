@@ -239,6 +239,74 @@ RSpec.describe 'タスク管理機能', type: :system do
     end
   end
 
+  describe 'バリデーションエラーメッセージ' do
+    context '登録画面' do
+      context 'タイトルが空の場合' do
+        it 'Titleのエラーメッセージが表示される' do
+          visit new_task_path
+          fill_in "task[title]", with: ""
+          fill_in "task[content]", with: "Buy a milk at supermarket"
+          click_on "create-task"
+          expect(page).to have_content "Title can't be blank"
+        end
+      end
+
+      context '内容が空の場合' do
+        it 'Contentのエラーメッセージが表示される' do
+          visit new_task_path
+          fill_in "task[title]", with: "Buy a milk"
+          fill_in "task[content]", with: ""
+          click_on "create-task"
+          expect(page).to have_content "Content can't be blank"
+        end
+      end
+
+      context 'タイトルと内容が空の場合' do
+        it 'TitleとContentのエラーメッセージが表示される' do
+          visit new_task_path
+          fill_in "task[title]", with: ""
+          fill_in "task[content]", with: ""
+          click_on "create-task"
+          expect(page).to have_content "Title can't be blank"
+          expect(page).to have_content "Content can't be blank"
+        end
+      end
+    end
+
+    context '編集画面' do
+      context 'タイトルが空の場合' do
+        it 'Titleのエラーメッセージが表示される' do
+          visit new_task_path
+          fill_in "task[title]", with: ""
+          fill_in "task[content]", with: "Buy a milk at supermarket"
+          click_on "create-task"
+          expect(page).to have_content "Title can't be blank"
+        end
+      end
+
+      context '内容が空の場合' do
+        it 'Contentのエラーメッセージが表示される' do
+          visit new_task_path
+          fill_in "task[title]", with: "Buy a milk"
+          fill_in "task[content]", with: ""
+          click_on "create-task"
+          expect(page).to have_content "Content can't be blank"
+        end
+      end
+
+      context 'タイトルと内容が空の場合' do
+        it 'TitleとContentのエラーメッセージが表示される' do
+          visit new_task_path
+          fill_in "task[title]", with: ""
+          fill_in "task[content]", with: ""
+          click_on "create-task"
+          expect(page).to have_content "Title can't be blank"
+          expect(page).to have_content "Content can't be blank"
+        end
+      end
+    end
+  end
+
   describe 'フラッシュメッセージ' do
     context 'タスクの登録に成功した場合' do
       it '登録のフラッシュメッセージが表示される' do
