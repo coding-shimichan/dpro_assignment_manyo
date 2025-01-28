@@ -16,6 +16,13 @@
         <li><%= link_to "New Task", new_task_path, id: "new-task" %></li>
       </ul>
     </nav>
+    
+    <div>
+      <% flash.each do |key, message| %>
+        <%= content_tag :div, message, :id => key %>
+      <% end %>
+    </div>
+
     <%= yield %>
   </body>
 </html>
