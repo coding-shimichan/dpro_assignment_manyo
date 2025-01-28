@@ -122,6 +122,43 @@ RSpec.describe 'タスク管理機能', type: :system do
     end
   end
 
+  describe 'フラッシュメッセージ' do
+    context 'タスクの登録に成功した場合' do
+      it '登録のフラッシュメッセージが表示される' do
+        visit new_task_path
+        fill_in "task[title]", with: "Buy a milk"
+        fill_in "task[content]", with: "Buy a milk at a supermarket"
+        click_on "Create Task"
+
+        expect(page).to have_text "Task was successfully created."
+      end
+    end
+
+    context 'タスクの更新に成功した場合' do
+      it '更新のフラッシュメッセージが表示される' do
+        task = FactoryBot.create(:task)
+        visit edit_task_path(task.id)
+        fill_in "task[title]", with: "modified title"
+        click_on "Update Task"
+
+        expect(page).to have_text "Task was successfully updated."
+      end
+    end
+
+    context 'タスクを削除した場合' do
+      it '削除のフラッシュメッセージが表示される' do
+        task = FactoryBot.create(:task)
+        visit tasks_path
+
+        page.accept_confirm("Are you sure?") do
+          click_on "Destroy"
+        end
+
+        expect(page).to have_text "Task was successfully destroyed."
+      end
+    end
+  end
+
   describe '登録機能' do
     context 'タスクを登録した場合' do
       it '登録したタスクが表示される' do
