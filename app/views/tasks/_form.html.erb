@@ -22,6 +22,6 @@
   </div>
 
   <div class="actions">
-    <%= form.submit "Create Task", id: "create-task" %>
+    <%= form.submit id: task.persisted? ? "update-task" : "create-task" %>
   </div>
 <% end %>
