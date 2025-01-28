@@ -26,7 +26,7 @@ class TasksController < ApplicationController
     respond_to do |format|
       if @task.save
         flash[:notice] = "Task was successfully created."
-        format.html { redirect_to task_url(@task) }
+        format.html { redirect_to tasks_path }
         format.json { render :show, status: :created, location: @task }
       else
         format.html { render :new, status: :unprocessable_entity }
