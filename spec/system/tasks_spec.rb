@@ -61,6 +61,34 @@ RSpec.describe 'タスク管理機能', type: :system do
     end
   end
   
+  describe 'タスク詳細画面' do
+    context 'タスク詳細画面に遷移した場合' do
+      it '画面タイトルが表示される' do
+        task = FactoryBot.create(:task)
+        visit task_path(task.id)
+
+        expect(page).to have_selector "h1", text: "Show Task Page"
+      end
+
+      it '項目名が表示される' do
+        task = FactoryBot.create(:task)
+        visit task_path(task.id)
+        
+        expect(page).to have_content "Title"
+        expect(page).to have_content "Content"
+        expect(page).to have_content "Created_at"
+      end
+
+      it '編集画面、タスク一覧画面へのリンクが表示される' do
+        task = FactoryBot.create(:task)
+        visit task_path(task.id)
+        
+        expect(page).to have_selector "a", text: "Edit", id: "edit-task"
+        expect(page).to have_selector "a", text: "Back", id: "back"
+      end
+    end
+  end
+
   describe '登録機能' do
     context 'タスクを登録した場合' do
       it '登録したタスクが表示される' do
