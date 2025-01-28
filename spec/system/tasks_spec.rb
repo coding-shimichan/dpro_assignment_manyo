@@ -11,6 +11,123 @@ RSpec.describe 'タスク管理機能', type: :system do
     end
   end
 
+  describe '画面遷移' do
+    context 'root' do
+      it '一覧画面が表示される' do
+        visit root_path
+        expect(page).to have_selector "h1", text: "Tasks Index Page"
+      end
+    end
+
+    context 'グローバルナビゲーション' do
+      it '"Tasks Index"をクリックすると一覧画面が表示される' do
+        visit new_task_path
+        click_on "tasks-index"
+        expect(current_path).to eq tasks_path
+      end
+
+      it '"New Task"をクリックすると登録画面が表示される' do
+        visit tasks_path
+        click_on "new-task"
+        expect(current_path).to eq new_task_path
+      end
+    end
+  
+    context '一覧画面' do
+      it '"Show"をクリックすると詳細画面が表示される' do
+        task = FactoryBot.create(:task)
+        visit tasks_path
+        click_on "Show"
+        expect(current_path).to eq task_path(task.id)
+      end
+
+      it '"Edit"をクリックすると編集画面が表示される' do
+        task = FactoryBot.create(:task)
+        visit tasks_path
+        click_on "Edit"
+        expect(current_path).to eq edit_task_path(task.id)
+      end
+
+      it '"Destroy"をクリックすると一覧画面が表示される' do
+        task = FactoryBot.create(:task)
+        visit tasks_path
+        page.accept_confirm("Are you sure?") do
+          click_on "Destroy"
+        end
+
+        expect(page).to have_content "Tasks Index Page"
+      end
+    end
+
+    context '詳細画面' do
+      it '"Edit"をクリックすると編集画面が表示される' do
+        task = FactoryBot.create(:task)
+        visit task_path(task.id)
+        click_on "edit-task"
+
+        expect(current_path).to eq edit_task_path(task.id)
+      end
+
+      it '"Back"をクリックすると一覧画面が表示される' do
+        task = FactoryBot.create(:task)
+        visit task_path(task.id)
+        click_on "back"
+
+        expect(current_path).to eq tasks_path
+      end
+    end
+
+    context '編集画面' do
+      context '"Update Task"' do
+        it '成功すると詳細画面が表示される' do
+          task = FactoryBot.create(:task)
+          visit edit_task_path(task.id)
+          fill_in "task[title]", with: "Modified title"
+          click_on "update-task"
+
+          expect(page).to have_selector "h1", text: "Show Task Page"
+        end
+
+        it '失敗すると編集画面が表示される' do
+          task = FactoryBot.create(:task)
+          visit edit_task_path(task.id)
+          fill_in "task[title]", with: ""
+          click_on "update-task"
+
+          expect(page).to have_selector "h1", text: "Edit Task Page"
+        end
+      end
+
+      it '"Back"を押すと一覧画面が表示される' do
+        task = FactoryBot.create(:task)
+        visit edit_task_path(task.id)
+        click_on "back"
+
+        expect(current_path).to eq tasks_path
+      end
+    end
+
+    context '登録画面' do
+      context '"Create Task"' do
+        it '登録に成功した場合一覧画面が表示される' do
+          visit new_task_path
+          fill_in "task[title]", with: "Buy a milk"
+          fill_in "task[content]", with: "Buy a milk at a supermarket"
+          click_on "create-task"
+
+          expect(page).to have_selector "h1", text: "Tasks Index Page"
+        end
+
+        it '登録に失敗した場合編集画面が表示される' do
+          visit new_task_path
+          click_on "create-task"
+
+          expect(page).to have_selector "h1", text: "New Task Page"
+        end
+      end
+    end
+  end
+
   describe 'タスク一覧画面' do
     context '一覧画面に遷移した場合' do
       it '画面タイトルが表示される' do
