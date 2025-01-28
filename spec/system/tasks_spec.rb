@@ -22,13 +22,13 @@ RSpec.describe 'タスク管理機能', type: :system do
     context 'グローバルナビゲーション' do
       it '"Tasks Index"をクリックすると一覧画面が表示される' do
         visit new_task_path
-        click_on "tasks-index"
+        click_on "Tasks Index"
         expect(current_path).to eq tasks_path
       end
 
       it '"New Task"をクリックすると登録画面が表示される' do
         visit tasks_path
-        click_on "new-task"
+        click_on "New Task"
         expect(current_path).to eq new_task_path
       end
     end
