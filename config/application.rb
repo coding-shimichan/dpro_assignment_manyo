@@ -27,6 +27,8 @@ module CdpWebManyoTask
         request_specs: false
     end
 
+    # Set default language to ja
+    config.i18n.default_locale = :ja
     # Load I18n translation config file for models
     config.i18n.load_path += Dir[Rails.root.join('config/locales/**/*.{rb,yml}')]
   end
