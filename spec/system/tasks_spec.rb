@@ -391,6 +391,15 @@ RSpec.describe 'タスク管理機能', type: :system do
           end
         end
       end
+
+      context 'タスクの作成日時の表示' do
+        it '日時のフォーマットが適用されている' do
+          fifth_task = FactoryBot.create(:task, title: "fifth_task", created_at: 10.days.from_now)
+          visit tasks_path
+          task_created_at = all(".task-created-at").map(&:text).first
+          expect(task_created_at).to eq I18n.l(fifth_task.created_at, format: :long)
+        end
+      end
     end
   end
 
