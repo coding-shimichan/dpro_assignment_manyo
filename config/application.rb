@@ -26,5 +26,8 @@ module CdpWebManyoTask
         controller_specs: false,
         request_specs: false
     end
+
+    # Load I18n translation config file for models
+    config.i18n.load_path += Dir[Rails.root.join('config/locales/**/*.{rb,yml}')]
   end
 end
