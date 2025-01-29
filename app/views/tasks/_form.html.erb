@@ -22,6 +22,8 @@
   </div>
 
   <div class="actions">
-    <%= form.submit id: task.persisted? ? "update-task" : "create-task" %>
+    <% button_label = task.persisted? ? t('helpers.submit.update', model: "Task") : t('helpers.submit.create', model: "Task") %>
+    <% button_id = task.persisted? ? "update-task" : "create-task" %>
+    <%= form.submit button_label, id: button_id %>
   </div>
 <% end %>
