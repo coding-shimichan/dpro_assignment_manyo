@@ -400,6 +400,27 @@ RSpec.describe 'タスク管理機能', type: :system do
           expect(task_created_at).to eq I18n.l(fifth_task.created_at, format: :long)
         end
       end
+
+      context 'ページネーション' do
+        it '1ページに10件のタスクが表示される' do
+          50.times do |n|
+            FactoryBot.create(:task, title: "Task #{n}")
+          end
+
+          visit tasks_path
+          task_count = all("#tasks-table tbody tr").length
+          expect(task_count).to eq 10
+        end
+
+        it 'ページネーションのコントローラが表示される' do
+          50.times do |n|
+            FactoryBot.create(:task, title: "Task #{n}")
+          end
+
+          visit tasks_path
+          expect(page).to have_selector "span", class: "page"
+        end
+      end
     end
   end
 
