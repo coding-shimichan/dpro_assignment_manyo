@@ -5,8 +5,8 @@ RSpec.describe 'タスク管理機能', type: :system do
     context '一覧画面に遷移した場合' do
       it 'グローバルナビゲーションが表示される' do
         visit tasks_path
-        expect(page).to have_content "Tasks Index"
-        expect(page).to have_content "New Task"
+        expect(page).to have_content I18n.t("defaults.navigations.tasks")
+        expect(page).to have_content I18n.t("defaults.navigations.new_task")
       end
     end
   end
@@ -15,21 +15,23 @@ RSpec.describe 'タスク管理機能', type: :system do
     context 'root' do
       it '一覧画面が表示される' do
         visit root_path
-        expect(page).to have_selector "h1", text: "Tasks Index Page"
+        expect(page).to have_selector "h1", text: I18n.t("tasks.index.title")
       end
     end
 
     context 'グローバルナビゲーション' do
       it '"Tasks Index"をクリックすると一覧画面が表示される' do
         visit new_task_path
-        click_on "Tasks Index"
+        click_on I18n.t("defaults.navigations.tasks")
         expect(current_path).to eq tasks_path
+        expect(page).to have_selector "h1", text: I18n.t("tasks.index.title")
       end
 
       it '"New Task"をクリックすると登録画面が表示される' do
         visit tasks_path
-        click_on "New Task"
+        click_on I18n.t("defaults.navigations.new_task")
         expect(current_path).to eq new_task_path
+        expect(page).to have_selector "h1", text: I18n.t("tasks.new.title")
       end
     end
   
@@ -37,25 +39,27 @@ RSpec.describe 'タスク管理機能', type: :system do
       it '"Show"をクリックすると詳細画面が表示される' do
         task = FactoryBot.create(:task)
         visit tasks_path
-        click_on "Show"
+        click_on I18n.t("helpers.show")
         expect(current_path).to eq task_path(task.id)
+        expect(page).to have_selector "h1", text: I18n.t("tasks.show.title")
       end
 
       it '"Edit"をクリックすると編集画面が表示される' do
         task = FactoryBot.create(:task)
         visit tasks_path
-        click_on "Edit"
+        click_on I18n.t("helpers.edit")
         expect(current_path).to eq edit_task_path(task.id)
+        expect(page).to have_selector "h1", text: I18n.t("tasks.edit.title")
       end
 
       it '"Destroy"をクリックすると一覧画面が表示される' do
         task = FactoryBot.create(:task)
         visit tasks_path
-        page.accept_confirm("Are you sure?") do
-          click_on "Destroy"
+        page.accept_confirm(I18n.t("helpers.confirm")) do
+          click_on I18n.t("helpers.destroy")
         end
 
-        expect(page).to have_content "Tasks Index Page"
+        expect(page).to have_content I18n.t("tasks.index.title")
       end
     end
 
@@ -66,14 +70,16 @@ RSpec.describe 'タスク管理機能', type: :system do
         click_on "edit-task"
 
         expect(current_path).to eq edit_task_path(task.id)
+        expect(page).to have_selector "h1", text: I18n.t("tasks.edit.title")
       end
 
       it '"Back"をクリックすると一覧画面が表示される' do
         task = FactoryBot.create(:task)
         visit task_path(task.id)
-        click_on "back"
+        click_on I18n.t("helpers.back")
 
         expect(current_path).to eq tasks_path
+        expect(page).to have_selector "h1", text: I18n.t("tasks.index.title")
       end
     end
 
@@ -85,7 +91,7 @@ RSpec.describe 'タスク管理機能', type: :system do
           fill_in "task[title]", with: "Modified title"
           click_on "update-task"
 
-          expect(page).to have_selector "h1", text: "Show Task Page"
+          expect(page).to have_selector "h1", text: I18n.t("tasks.show.title")
         end
 
         it '失敗すると編集画面が表示される' do
@@ -94,16 +100,17 @@ RSpec.describe 'タスク管理機能', type: :system do
           fill_in "task[title]", with: ""
           click_on "update-task"
 
-          expect(page).to have_selector "h1", text: "Edit Task Page"
+          expect(page).to have_selector "h1", text: I18n.t("tasks.edit.title")
         end
       end
 
       it '"Back"を押すと一覧画面が表示される' do
         task = FactoryBot.create(:task)
         visit edit_task_path(task.id)
-        click_on "back"
+        click_on I18n.t("helpers.back")
 
         expect(current_path).to eq tasks_path
+        expect(page).to have_selector "h1", text: I18n.t("tasks.index.title")
       end
     end
 
@@ -115,14 +122,14 @@ RSpec.describe 'タスク管理機能', type: :system do
           fill_in "task[content]", with: "Buy a milk at a supermarket"
           click_on "create-task"
 
-          expect(page).to have_selector "h1", text: "Tasks Index Page"
+          expect(page).to have_selector "h1", text: I18n.t("tasks.index.title")
         end
 
         it '登録に失敗した場合編集画面が表示される' do
           visit new_task_path
           click_on "create-task"
 
-          expect(page).to have_selector "h1", text: "New Task Page"
+          expect(page).to have_selector "h1", text: I18n.t("tasks.new.title")
         end
       end
     end
@@ -132,23 +139,23 @@ RSpec.describe 'タスク管理機能', type: :system do
     context '一覧画面に遷移した場合' do
       it '画面タイトルが表示される' do
         visit tasks_path
-        expect(page).to have_selector "h1", text: "Tasks Index Page"
+        expect(page).to have_selector "h1", text: I18n.t("tasks.index.title")
       end
 
       it 'テーブルヘッダーが表示される' do
         visit tasks_path
-        expect(page).to have_selector "th", text: "Title"
-        expect(page).to have_selector "th", text: "Content"
-        expect(page).to have_selector "th", text: "Created_at"
+        expect(page).to have_selector "th", text: I18n.t("activerecord.attributes.task.title")
+        expect(page).to have_selector "th", text: I18n.t("activerecord.attributes.task.content")
+        expect(page).to have_selector "th", text: I18n.t("activerecord.attributes.common.created_at")
       end
 
       it 'Show/Edit/Destroyのリンクが表示される' do
         FactoryBot.create(:task)
 
         visit tasks_path
-        expect(page).to have_selector "a", text: "Show", class: "show-task"
-        expect(page).to have_selector "a", text: "Edit", class: "edit-task"
-        expect(page).to have_selector "a", text: "Destroy", class: "destroy-task"
+        expect(page).to have_selector "a", text: I18n.t("helpers.show"), class: "show-task"
+        expect(page).to have_selector "a", text: I18n.t("helpers.edit"), class: "edit-task"
+        expect(page).to have_selector "a", text: I18n.t("helpers.destroy"), class: "destroy-task"
       end
     end
   end
@@ -157,23 +164,23 @@ RSpec.describe 'タスク管理機能', type: :system do
     context 'タスク登録画面に遷移した場合' do
       it '画面タイトルが表示される' do
         visit new_task_path
-        expect(page).to have_selector "h1", text: "New Task Page"
+        expect(page).to have_selector "h1", text: I18n.t("tasks.new.title")
       end
 
       it 'フォームラベルが表示される' do
         visit new_task_path
-        expect(page).to have_selector "label", text: "Title"
-        expect(page).to have_selector "label", text: "Content"
+        expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.title")
+        expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.content")
       end
 
       it '登録ボタンが表示される' do
         visit new_task_path
-        expect(page).to have_button "Create Task", id: "create-task"
+        expect(page).to have_button I18n.t("helpers.submit.create", model: "Task"), id: "create-task"
       end
 
       it '戻るリンクが表示される' do
         visit new_task_path
-        expect(page).to have_selector "a", text: "Back", id: "back"
+        expect(page).to have_selector "a", text: I18n.t("helpers.back"), id: "back"
       end
     end
   end
@@ -184,24 +191,24 @@ RSpec.describe 'タスク管理機能', type: :system do
         task = FactoryBot.create(:task)
         visit task_path(task.id)
 
-        expect(page).to have_selector "h1", text: "Show Task Page"
+        expect(page).to have_selector "h1", text: I18n.t("tasks.show.title")
       end
 
       it '項目名が表示される' do
         task = FactoryBot.create(:task)
         visit task_path(task.id)
         
-        expect(page).to have_content "Title"
-        expect(page).to have_content "Content"
-        expect(page).to have_content "Created_at"
+        expect(page).to have_content I18n.t("activerecord.attributes.task.title")
+        expect(page).to have_content I18n.t("activerecord.attributes.task.content")
+        expect(page).to have_content I18n.t("activerecord.attributes.common.created_at")
       end
 
       it '編集画面、タスク一覧画面へのリンクが表示される' do
         task = FactoryBot.create(:task)
         visit task_path(task.id)
         
-        expect(page).to have_selector "a", text: "Edit", id: "edit-task"
-        expect(page).to have_selector "a", text: "Back", id: "back"
+        expect(page).to have_selector "a", text: I18n.t("helpers.edit"), id: "edit-task"
+        expect(page).to have_selector "a", text: I18n.t("helpers.back"), id: "back"
       end
     end
   end
@@ -212,29 +219,29 @@ RSpec.describe 'タスク管理機能', type: :system do
         task = FactoryBot.create(:task)
         visit edit_task_path(task.id)
 
-        expect(page).to have_selector "h1", text: "Edit Task Page"
+        expect(page).to have_selector "h1", text: I18n.t("tasks.edit.title")
       end
 
       it 'フォームラベルが表示される' do
         task = FactoryBot.create(:task)
         visit edit_task_path(task.id)
         
-        expect(page).to have_selector "label", text: "Title"
-        expect(page).to have_selector "label", text: "Content"
+        expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.title")
+        expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.content")
       end
 
       it '更新ボタンが表示される' do
         task = FactoryBot.create(:task)
         visit edit_task_path(task.id)
 
-        expect(page).to have_button "Update Task", id: "update-task"
+        expect(page).to have_button I18n.t("helpers.submit.update", model: "Task"), id: "update-task"
       end
 
       it '戻るリンクが表示される' do
         task = FactoryBot.create(:task)
         visit edit_task_path(task.id)
         
-        expect(page).to have_selector "a", text: "Back", id: "back"
+        expect(page).to have_selector "a", text: I18n.t("helpers.back"), id: "back"
       end
     end
   end
@@ -247,7 +254,7 @@ RSpec.describe 'タスク管理機能', type: :system do
           fill_in "task[title]", with: ""
           fill_in "task[content]", with: "Buy a milk at supermarket"
           click_on "create-task"
-          expect(page).to have_content "Title can't be blank"
+          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.title"), message: I18n.t("errors.messages.blank"))
         end
       end
 
@@ -257,7 +264,7 @@ RSpec.describe 'タスク管理機能', type: :system do
           fill_in "task[title]", with: "Buy a milk"
           fill_in "task[content]", with: ""
           click_on "create-task"
-          expect(page).to have_content "Content can't be blank"
+          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.content"), message: I18n.t("errors.messages.blank"))
         end
       end
 
@@ -267,8 +274,8 @@ RSpec.describe 'タスク管理機能', type: :system do
           fill_in "task[title]", with: ""
           fill_in "task[content]", with: ""
           click_on "create-task"
-          expect(page).to have_content "Title can't be blank"
-          expect(page).to have_content "Content can't be blank"
+          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.title"), message: I18n.t("errors.messages.blank"))
+          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.content"), message: I18n.t("errors.messages.blank"))
         end
       end
     end
@@ -280,7 +287,7 @@ RSpec.describe 'タスク管理機能', type: :system do
           fill_in "task[title]", with: ""
           fill_in "task[content]", with: "Buy a milk at supermarket"
           click_on "create-task"
-          expect(page).to have_content "Title can't be blank"
+          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.title"), message: I18n.t("errors.messages.blank"))
         end
       end
 
@@ -290,7 +297,7 @@ RSpec.describe 'タスク管理機能', type: :system do
           fill_in "task[title]", with: "Buy a milk"
           fill_in "task[content]", with: ""
           click_on "create-task"
-          expect(page).to have_content "Content can't be blank"
+          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.content"), message: I18n.t("errors.messages.blank"))
         end
       end
 
@@ -300,8 +307,8 @@ RSpec.describe 'タスク管理機能', type: :system do
           fill_in "task[title]", with: ""
           fill_in "task[content]", with: ""
           click_on "create-task"
-          expect(page).to have_content "Title can't be blank"
-          expect(page).to have_content "Content can't be blank"
+          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.title"), message: I18n.t("errors.messages.blank"))
+          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.content"), message: I18n.t("errors.messages.blank"))
         end
       end
     end
@@ -313,9 +320,9 @@ RSpec.describe 'タスク管理機能', type: :system do
         visit new_task_path
         fill_in "task[title]", with: "Buy a milk"
         fill_in "task[content]", with: "Buy a milk at a supermarket"
-        click_on "Create Task"
+        click_on I18n.t("helpers.submit.create", model: "Task")
 
-        expect(page).to have_text "Task was successfully created."
+        expect(page).to have_text I18n.t("tasks.create.created")
       end
     end
 
@@ -324,9 +331,9 @@ RSpec.describe 'タスク管理機能', type: :system do
         task = FactoryBot.create(:task)
         visit edit_task_path(task.id)
         fill_in "task[title]", with: "modified title"
-        click_on "Update Task"
+        click_on I18n.t("helpers.submit.update", model: "Task")
 
-        expect(page).to have_text "Task was successfully updated."
+        expect(page).to have_text I18n.t("tasks.update.updated")
       end
     end
 
@@ -335,11 +342,11 @@ RSpec.describe 'タスク管理機能', type: :system do
         task = FactoryBot.create(:task)
         visit tasks_path
 
-        page.accept_confirm("Are you sure?") do
-          click_on "Destroy"
+        page.accept_confirm(I18n.t("helpers.confirm")) do
+          click_on I18n.t("helpers.destroy")
         end
 
-        expect(page).to have_text "Task was successfully destroyed."
+        expect(page).to have_text I18n.t("tasks.destroy.destroyed")
       end
     end
   end
@@ -350,7 +357,7 @@ RSpec.describe 'タスク管理機能', type: :system do
         FactoryBot.create(:task)
 
         visit tasks_path
-        expect(page).to have_content "Tasks Index Page"
+        expect(page).to have_content I18n.t("tasks.index.title")
         expect(page).to have_content "書類作成"
       end
     end
@@ -362,7 +369,7 @@ RSpec.describe 'タスク管理機能', type: :system do
         FactoryBot.create(:task)
         
         visit tasks_path
-        expect(page).to have_content "Tasks Index Page"
+        expect(page).to have_content I18n.t("tasks.index.title")
         expect(page).to have_content "書類作成"
       end
     end
@@ -374,7 +381,7 @@ RSpec.describe 'タスク管理機能', type: :system do
         task = FactoryBot.create(:task)
 
         visit task_path(task.id)
-        expect(page).to have_content "Show Task Page"
+        expect(page).to have_content I18n.t("tasks.show.title")
         expect(page).to have_content "企画書を作成する。"
       end
     end
