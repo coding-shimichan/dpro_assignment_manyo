@@ -23,6 +23,8 @@ gem 'jbuilder', '~> 2.7'
 # gem 'bcrypt', '~> 3.1.20'
 # Use rails-i18n to localize
 gem 'rails-i18n', '~> 6.0' # For Rails 6.x
+# Use kaminari for pagination
+gem 'kaminari'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
