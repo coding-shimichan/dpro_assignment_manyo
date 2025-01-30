@@ -120,6 +120,9 @@ RSpec.describe 'タスク管理機能', type: :system do
           visit new_task_path
           fill_in "task[title]", with: "Buy a milk"
           fill_in "task[content]", with: "Buy a milk at a supermarket"
+          fill_in "task[deadline_on]", with: "20251231\t" # "2025-12-31"
+          select I18n.t("enums.task.priority.medium"), from: "task[priority]"
+          select I18n.t("enums.task.status.in_progress"), from: "task[status]"
           click_on "create-task"
 
           expect(page).to have_selector "h1", text: I18n.t("tasks.index.title")
@@ -176,10 +179,18 @@ RSpec.describe 'タスク管理機能', type: :system do
         expect(page).to have_selector "h1", text: I18n.t("tasks.new.title")
       end
 
-      it 'フォームラベルが表示される' do
+      it 'フォームラベルとフィールドが表示される' do
         visit new_task_path
         expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.title")
         expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.content")
+        expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.deadline_on")
+        expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.priority")
+        expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.status")
+        expect(page).to have_field "task[title]"
+        expect(page).to have_field "task[content]"
+        expect(page).to have_field "task[deadline_on]"
+        expect(page).to have_field "task[priority]"
+        expect(page).to have_field "task[status]"
       end
 
       it '登録ボタンが表示される' do
@@ -210,6 +221,11 @@ RSpec.describe 'タスク管理機能', type: :system do
         expect(page).to have_content I18n.t("activerecord.attributes.task.title")
         expect(page).to have_content I18n.t("activerecord.attributes.task.content")
         expect(page).to have_content I18n.t("activerecord.attributes.common.created_at")
+        expect(page).to have_content I18n.t("activerecord.attributes.task.deadline_on")
+        expect(page).to have_content I18n.t("activerecord.attributes.task.priority")
+        expect(page).to have_content I18n.t("activerecord.attributes.task.status")
+        expect(page).to have_content task.title
+        expect(page).to have_content task.content
       end
 
       it '編集画面、タスク一覧画面へのリンクが表示される' do
@@ -231,12 +247,20 @@ RSpec.describe 'タスク管理機能', type: :system do
         expect(page).to have_selector "h1", text: I18n.t("tasks.edit.title")
       end
 
-      it 'フォームラベルが表示される' do
+      it 'フォームラベルとフィールドが表示される' do
         task = FactoryBot.create(:task)
         visit edit_task_path(task.id)
         
         expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.title")
         expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.content")
+        expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.deadline_on")
+        expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.priority")
+        expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.status")
+        expect(page).to have_field "task[title]", with: task.title
+        expect(page).to have_field "task[content]", with: task.content
+        expect(page).to have_field "task[deadline_on]", with: task.deadline_on
+        expect(page).to have_field "task[priority]"
+        expect(page).to have_field "task[status]"
       end
 
       it '更新ボタンが表示される' do
@@ -329,6 +353,9 @@ RSpec.describe 'タスク管理機能', type: :system do
         visit new_task_path
         fill_in "task[title]", with: "Buy a milk"
         fill_in "task[content]", with: "Buy a milk at a supermarket"
+        fill_in "task[deadline_on]", with: "20251231\t" # "2025-12-31"
+        select I18n.t("enums.task.priority.medium"), from: "task[priority]"
+        select I18n.t("enums.task.status.in_progress"), from: "task[status]"
         click_on I18n.t("helpers.submit.create", model: "Task")
 
         expect(page).to have_text I18n.t("tasks.create.created")
