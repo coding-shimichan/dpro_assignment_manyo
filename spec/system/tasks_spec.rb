@@ -458,6 +458,52 @@ RSpec.describe 'タスク管理機能', type: :system do
         end
       end
     end
+
+    describe 'ソート機能' do
+      context 'パラメータなしの場合' do
+        let!(:first_task) { FactoryBot.create(:task, title: 'first_task', created_at: Time.zone.now) }
+        let!(:second_task) { FactoryBot.create(:task, title: 'second_task', created_at: 1.day.from_now) }
+        let!(:third_task) { FactoryBot.create(:task, title: 'third_task', created_at: 1.day.ago) }
+
+        it '作成日の新しい順に表示される' do
+          visit tasks_path
+          within "#tasks-table" do
+            task_titles = all(".task-title").map(&:text)
+            expect(task_titles).to eq %w(second_task first_task third_task)
+          end
+        end
+      end
+
+      context '「終了期限」というリンクをクリックした場合' do
+        let!(:first_task) { FactoryBot.create(:task, title: 'first_task', deadline_on: Time.zone.now) }
+        let!(:second_task) { FactoryBot.create(:task, title: 'second_task', deadline_on: 1.day.from_now) }
+        let!(:third_task) { FactoryBot.create(:task, title: 'third_task', deadline_on: 1.day.ago) }
+
+        it '終了期限昇順に並び替えられたタスク一覧が表示される' do
+          visit tasks_path
+          click_on "終了期限"
+          within "#tasks-table" do
+            task_titles = all(".task-title").map(&:text)
+            expect(task_titles).to eq %w(third_task first_task second_task)
+          end
+        end
+      end
+
+      context '「優先度」というリンクをクリックした場合' do
+        let!(:first_task) { FactoryBot.create(:task, title: 'first_task', priority: 0) } # low
+        let!(:second_task) { FactoryBot.create(:task, title: 'second_task', priority: 1) } # medium
+        let!(:third_task) { FactoryBot.create(:task, title: 'third_task', priority: 2) } # high
+
+        it '優先度の高い順に並び替えられたタスク一覧が表示される' do
+          visit tasks_path
+          click_on "優先度"
+          within "#tasks-table" do
+            task_titles = all(".task-title").map(&:text)
+            expect(task_titles).to eq %w(third_task second_task first_task)
+          end
+        end
+      end
+    end
   end
 
   describe '詳細表示機能' do
