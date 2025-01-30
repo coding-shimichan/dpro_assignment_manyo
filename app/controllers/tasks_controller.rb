@@ -3,7 +3,7 @@ class TasksController < ApplicationController
 
   # GET /tasks or /tasks.json
   def index
-    @tasks = Task.all
+    @tasks = Task.order(created_at: :desc).page(params[:page])
   end
 
   # GET /tasks/1 or /tasks/1.json
@@ -25,7 +25,7 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.save
-        flash[:notice] = "Task was successfully created."
+        flash[:notice] = t(".created")
         format.html { redirect_to tasks_path }
         format.json { render :show, status: :created, location: @task }
       else
@@ -39,7 +39,7 @@ class TasksController < ApplicationController
   def update
     respond_to do |format|
       if @task.update(task_params)
-        flash[:notice] = "Task was successfully updated."
+        flash[:notice] = t(".updated")
         format.html { redirect_to task_url(@task) }
         format.json { render :show, status: :ok, location: @task }
       else
@@ -54,7 +54,7 @@ class TasksController < ApplicationController
     @task.destroy
 
     respond_to do |format|
-      flash[:notice] = "Task was successfully destroyed."
+      flash[:notice] = t(".destroyed")
       format.html { redirect_to tasks_url }
       format.json { head :no_content }
     end
