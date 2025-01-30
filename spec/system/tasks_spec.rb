@@ -147,12 +147,21 @@ RSpec.describe 'タスク管理機能', type: :system do
         expect(page).to have_selector "th", text: I18n.t("activerecord.attributes.task.title")
         expect(page).to have_selector "th", text: I18n.t("activerecord.attributes.task.content")
         expect(page).to have_selector "th", text: I18n.t("activerecord.attributes.common.created_at")
+        expect(page).to have_selector "th", text: I18n.t("activerecord.attributes.task.deadline_on")
+        expect(page).to have_selector "th", text: I18n.t("activerecord.attributes.task.priority")
+        expect(page).to have_selector "th", text: I18n.t("activerecord.attributes.task.status")
       end
 
-      it 'Show/Edit/Destroyのリンクが表示される' do
-        FactoryBot.create(:task)
+      it '属性とShow/Edit/Destroyのリンクが表示される' do
+        task = FactoryBot.create(:task)
 
         visit tasks_path
+        expect(page).to have_selector "td", text: task.title, class: "task-title"
+        expect(page).to have_selector "td", text: task.content, class: "task-content"
+        expect(page).to have_selector "td", text: I18n.l(task.created_at, format: :long), class: "task-created-at"
+        expect(page).to have_selector "td", text: task.deadline_on, class: "task-deadline-on"
+        expect(page).to have_selector "td", text: I18n.t("enums.task.priority.#{task.priority}"), class: "task-priority"
+        expect(page).to have_selector "td", text: I18n.t("enums.task.status.#{task.status}"), class: "task-status"
         expect(page).to have_selector "a", text: I18n.t("helpers.show"), class: "show-task"
         expect(page).to have_selector "a", text: I18n.t("helpers.edit"), class: "edit-task"
         expect(page).to have_selector "a", text: I18n.t("helpers.destroy"), class: "destroy-task"
