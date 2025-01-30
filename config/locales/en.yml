@@ -6,8 +6,12 @@ en:
       task:
         title: Title
         content: Content
+        deadline_on: Deadline_on
+        priority: Priority
+        status: Status
       common:
         created_at: Created_at
+        updated_at: Updated_at
   defaults:
     navigations:
       tasks: Tasks Index
