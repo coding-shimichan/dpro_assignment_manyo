@@ -522,7 +522,7 @@ RSpec.describe 'タスク管理機能', type: :system do
         it '終了期限昇順に並び替えられたタスク一覧が表示される' do
           visit tasks_path
           click_on "終了期限"
-          sleep 1
+          sleep 0.2
           expect(page).to have_current_path "#{tasks_path}?sort_deadline_on=true"
           within "#tasks-table" do
             task_titles = all(".task-title").map(&:text)
@@ -539,7 +539,7 @@ RSpec.describe 'タスク管理機能', type: :system do
         it '優先度の高い順に並び替えられたタスク一覧が表示される' do
           visit tasks_path
           click_on "優先度"
-          sleep 1
+          sleep 0.2
           expect(page).to have_current_path "#{tasks_path}?sort_priority=true"
           within "#tasks-table" do
             task_titles = all(".task-title").map(&:text)
@@ -557,7 +557,7 @@ RSpec.describe 'タスク管理機能', type: :system do
           visit tasks_path
           fill_in "search[title]", with: "LinkedIn"
           click_on "search_task"
-          sleep 1
+          sleep 0.2
           within "#tasks-table" do
             task_titles = all(".task-title").map(&:text)
             expect(task_titles).to include(linkedin_task.title)
@@ -574,7 +574,7 @@ RSpec.describe 'タスク管理機能', type: :system do
           visit tasks_path
           select I18n.t("enums.task.status.not_started"), from: "search[status]"
           click_on "search_task"
-          sleep 1
+          sleep 0.2
           within "#tasks-table" do
             task_titles = all(".task-title").map(&:text)
             expect(task_titles).to include(resume_task.title)
@@ -592,7 +592,7 @@ RSpec.describe 'タスク管理機能', type: :system do
           fill_in "search[title]", with: "companies"
           select I18n.t("enums.task.status.completed"), from: "search[status]"
           click_on "search_task"
-          sleep 1
+          sleep 0.2
           within "#tasks-table" do
             task_titles = all(".task-title").map(&:text)
             expect(task_titles).to include(research_task.title)
