@@ -1,6 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe 'タスク管理機能', type: :system do
+  shared_context "Create sample tasks" do
+    let!(:resume_task) { FactoryBot.create(:resume_task) }
+    let!(:linkedin_task) { FactoryBot.create(:linkedin_task) }
+    let!(:research_task) { FactoryBot.create(:research_task) }
+    let!(:apply_task) { FactoryBot.create(:apply_task) }
+  end
+
   describe 'グローバルナビゲーション' do
     context '一覧画面に遷移した場合' do
       it 'グローバルナビゲーションが表示される' do
@@ -544,28 +551,24 @@ RSpec.describe 'タスク管理機能', type: :system do
   
     describe '検索機能' do
       context 'タイトルであいまい検索をした場合' do
-        let!(:first_task) { FactoryBot.create(:task, title: 'aaa_task', status: 0) } # not_started
-        let!(:second_task) { FactoryBot.create(:task, title: 'aaa_bbb_task', status: 1) } # in_progress
-        let!(:third_task) { FactoryBot.create(:task, title: 'aaa_bbb_ccc_task', status: 2) } # completed
+        include_context "Create sample tasks"
 
         it "検索ワードを含むタスクのみ表示される" do
           visit tasks_path
-          fill_in "search[title]", with: "bbb"
+          fill_in "search[title]", with: "LinkedIn"
           click_on "search_task"
           sleep 1
           within "#tasks-table" do
             task_titles = all(".task-title").map(&:text)
-            expect(task_titles).to include(second_task.title, third_task.title)
-            expect(task_titles).not_to include(first_task.title)
-            expect(task_titles.length).to eq 2
+            expect(task_titles).to include(linkedin_task.title)
+            expect(task_titles).not_to include(resume_task.title, research_task.title, apply_task.title)
+            expect(task_titles.length).to eq 1
           end
         end
       end
 
       context 'ステータスで検索した場合' do
-        let!(:first_task) { FactoryBot.create(:task, title: 'aaa_task', status: 0) } # not_started
-        let!(:second_task) { FactoryBot.create(:task, title: 'aaa_bbb_task', status: 1) } # in_progress
-        let!(:third_task) { FactoryBot.create(:task, title: 'aaa_bbb_ccc_task', status: 2) } # completed
+        include_context "Create sample tasks"
 
         it "検索したステータスに一致するタスクのみ表示される" do
           visit tasks_path
@@ -574,28 +577,26 @@ RSpec.describe 'タスク管理機能', type: :system do
           sleep 1
           within "#tasks-table" do
             task_titles = all(".task-title").map(&:text)
-            expect(task_titles).to include(first_task.title)
-            expect(task_titles).not_to include(second_task.title, third_task.title)
+            expect(task_titles).to include(resume_task.title)
+            expect(task_titles).not_to include(linkedin_task.title, research_task.title, apply_task.title)
             expect(task_titles.length).to eq 1
           end
         end
       end
 
       context 'タイトルとステータスで検索した場合' do
-        let!(:first_task) { FactoryBot.create(:task, title: 'aaa_task', status: 0) } # not_started
-        let!(:second_task) { FactoryBot.create(:task, title: 'aaa_bbb_task', status: 1) } # in_progress
-        let!(:third_task) { FactoryBot.create(:task, title: 'aaa_bbb_ccc_task', status: 2) } # completed
+        include_context "Create sample tasks"
 
         it "検索ワードをタイトルに含み、かつステータスに一致するタスクのみ表示される" do
           visit tasks_path
-          fill_in "search[title]", with: "bbb"
+          fill_in "search[title]", with: "companies"
           select I18n.t("enums.task.status.completed"), from: "search[status]"
           click_on "search_task"
           sleep 1
           within "#tasks-table" do
             task_titles = all(".task-title").map(&:text)
-            expect(task_titles).to include(third_task.title)
-            expect(task_titles).not_to include(first_task.title, second_task.title)
+            expect(task_titles).to include(research_task.title)
+            expect(task_titles).not_to include(resume_task.title, linkedin_task.title, apply_task.title)
             expect(task_titles.length).to eq 1
           end
         end
