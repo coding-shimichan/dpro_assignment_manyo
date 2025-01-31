@@ -482,6 +482,8 @@ RSpec.describe 'タスク管理機能', type: :system do
         it '終了期限昇順に並び替えられたタスク一覧が表示される' do
           visit tasks_path
           click_on "終了期限"
+          sleep 1
+          expect(page).to have_current_path "#{tasks_path}?sort_deadline_on=true"
           within "#tasks-table" do
             task_titles = all(".task-title").map(&:text)
             expect(task_titles).to eq %w(third_task first_task second_task)
@@ -497,6 +499,8 @@ RSpec.describe 'タスク管理機能', type: :system do
         it '優先度の高い順に並び替えられたタスク一覧が表示される' do
           visit tasks_path
           click_on "優先度"
+          sleep 1
+          expect(page).to have_current_path "#{tasks_path}?sort_priority=true"
           within "#tasks-table" do
             task_titles = all(".task-title").map(&:text)
             expect(task_titles).to eq %w(third_task second_task first_task)
