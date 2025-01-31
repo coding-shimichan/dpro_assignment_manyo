@@ -30,11 +30,10 @@ class Task < ApplicationRecord
     end
 
     if params[:sort_deadline_on]
-      tasks.sorted_by_deadline
-    elsif params[:sort_priority]
-      tasks.sorted_by_priority
-    else
-      tasks.sorted_by_creation
+      tasks =tasks.sorted_by_deadline
+    else params[:sort_priority]
+      tasks =tasks.sorted_by_priority
     end
+    tasks.sorted_by_creation
   end
 end
