@@ -19,4 +19,22 @@ class Task < ApplicationRecord
 
   # Config for pagination (using gem 'kaminari')
   paginates_per 10
+
+  def self.search_and_sort(params)
+    tasks = all
+    if params[:search].present?
+      title = params[:search][:title]
+      status = params[:search][:status]
+
+      tasks = tasks.in_status(status).fuzzy_search(title)
+    end
+
+    if params[:sort_deadline_on]
+      tasks.sorted_by_deadline
+    elsif params[:sort_priority]
+      tasks.sorted_by_priority
+    else
+      tasks.sorted_by_creation
+    end
+  end
 end
