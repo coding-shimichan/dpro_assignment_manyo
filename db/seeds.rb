@@ -10,6 +10,9 @@
     title: "Task #{n}",
     content: "Task content #{n}",
     created_at: n.day.from_now,
-    updated_at: n.day.from_now
+    updated_at: n.day.from_now,
+    deadline_on: (n+1).day.from_now,
+    priority: rand(max=3),
+    status: rand(max=3)
   )
 end

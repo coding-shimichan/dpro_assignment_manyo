@@ -1,6 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe 'タスク管理機能', type: :system do
+  shared_context "Create sample tasks" do
+    let!(:resume_task) { FactoryBot.create(:resume_task) }
+    let!(:linkedin_task) { FactoryBot.create(:linkedin_task) }
+    let!(:research_task) { FactoryBot.create(:research_task) }
+    let!(:apply_task) { FactoryBot.create(:apply_task) }
+  end
+
   describe 'グローバルナビゲーション' do
     context '一覧画面に遷移した場合' do
       it 'グローバルナビゲーションが表示される' do
@@ -120,6 +127,9 @@ RSpec.describe 'タスク管理機能', type: :system do
           visit new_task_path
           fill_in "task[title]", with: "Buy a milk"
           fill_in "task[content]", with: "Buy a milk at a supermarket"
+          fill_in "task[deadline_on]", with: "20251231\t" # "2025-12-31"
+          select I18n.t("enums.task.priority.medium"), from: "task[priority]"
+          select I18n.t("enums.task.status.in_progress"), from: "task[status]"
           click_on "create-task"
 
           expect(page).to have_selector "h1", text: I18n.t("tasks.index.title")
@@ -147,12 +157,21 @@ RSpec.describe 'タスク管理機能', type: :system do
         expect(page).to have_selector "th", text: I18n.t("activerecord.attributes.task.title")
         expect(page).to have_selector "th", text: I18n.t("activerecord.attributes.task.content")
         expect(page).to have_selector "th", text: I18n.t("activerecord.attributes.common.created_at")
+        expect(page).to have_selector "th", text: I18n.t("activerecord.attributes.task.deadline_on")
+        expect(page).to have_selector "th", text: I18n.t("activerecord.attributes.task.priority")
+        expect(page).to have_selector "th", text: I18n.t("activerecord.attributes.task.status")
       end
 
-      it 'Show/Edit/Destroyのリンクが表示される' do
-        FactoryBot.create(:task)
+      it '属性とShow/Edit/Destroyのリンクが表示される' do
+        task = FactoryBot.create(:task)
 
         visit tasks_path
+        expect(page).to have_selector "td", text: task.title, class: "task-title"
+        expect(page).to have_selector "td", text: task.content, class: "task-content"
+        expect(page).to have_selector "td", text: I18n.l(task.created_at, format: :long), class: "task-created-at"
+        expect(page).to have_selector "td", text: task.deadline_on, class: "task-deadline-on"
+        expect(page).to have_selector "td", text: I18n.t("enums.task.priority.#{task.priority}"), class: "task-priority"
+        expect(page).to have_selector "td", text: I18n.t("enums.task.status.#{task.status}"), class: "task-status"
         expect(page).to have_selector "a", text: I18n.t("helpers.show"), class: "show-task"
         expect(page).to have_selector "a", text: I18n.t("helpers.edit"), class: "edit-task"
         expect(page).to have_selector "a", text: I18n.t("helpers.destroy"), class: "destroy-task"
@@ -167,10 +186,18 @@ RSpec.describe 'タスク管理機能', type: :system do
         expect(page).to have_selector "h1", text: I18n.t("tasks.new.title")
       end
 
-      it 'フォームラベルが表示される' do
+      it 'フォームラベルとフィールドが表示される' do
         visit new_task_path
         expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.title")
         expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.content")
+        expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.deadline_on")
+        expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.priority")
+        expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.status")
+        expect(page).to have_field "task[title]"
+        expect(page).to have_field "task[content]"
+        expect(page).to have_field "task[deadline_on]"
+        expect(page).to have_field "task[priority]"
+        expect(page).to have_field "task[status]"
       end
 
       it '登録ボタンが表示される' do
@@ -201,6 +228,11 @@ RSpec.describe 'タスク管理機能', type: :system do
         expect(page).to have_content I18n.t("activerecord.attributes.task.title")
         expect(page).to have_content I18n.t("activerecord.attributes.task.content")
         expect(page).to have_content I18n.t("activerecord.attributes.common.created_at")
+        expect(page).to have_content I18n.t("activerecord.attributes.task.deadline_on")
+        expect(page).to have_content I18n.t("activerecord.attributes.task.priority")
+        expect(page).to have_content I18n.t("activerecord.attributes.task.status")
+        expect(page).to have_content task.title
+        expect(page).to have_content task.content
       end
 
       it '編集画面、タスク一覧画面へのリンクが表示される' do
@@ -222,12 +254,20 @@ RSpec.describe 'タスク管理機能', type: :system do
         expect(page).to have_selector "h1", text: I18n.t("tasks.edit.title")
       end
 
-      it 'フォームラベルが表示される' do
+      it 'フォームラベルとフィールドが表示される' do
         task = FactoryBot.create(:task)
         visit edit_task_path(task.id)
         
         expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.title")
         expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.content")
+        expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.deadline_on")
+        expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.priority")
+        expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.status")
+        expect(page).to have_field "task[title]", with: task.title
+        expect(page).to have_field "task[content]", with: task.content
+        expect(page).to have_field "task[deadline_on]", with: task.deadline_on
+        expect(page).to have_field "task[priority]"
+        expect(page).to have_field "task[status]"
       end
 
       it '更新ボタンが表示される' do
@@ -248,67 +288,38 @@ RSpec.describe 'タスク管理機能', type: :system do
 
   describe 'バリデーションエラーメッセージ' do
     context '登録画面' do
-      context 'タイトルが空の場合' do
-        it 'Titleのエラーメッセージが表示される' do
+      context 'すべて空欄で登録しようとした場合' do
+        it 'すべてのフィールドに対してエラーメッセージが表示される' do
           visit new_task_path
-          fill_in "task[title]", with: ""
-          fill_in "task[content]", with: "Buy a milk at supermarket"
-          click_on "create-task"
-          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.title"), message: I18n.t("errors.messages.blank"))
-        end
-      end
-
-      context '内容が空の場合' do
-        it 'Contentのエラーメッセージが表示される' do
-          visit new_task_path
-          fill_in "task[title]", with: "Buy a milk"
-          fill_in "task[content]", with: ""
-          click_on "create-task"
-          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.content"), message: I18n.t("errors.messages.blank"))
-        end
-      end
-
-      context 'タイトルと内容が空の場合' do
-        it 'TitleとContentのエラーメッセージが表示される' do
-          visit new_task_path
-          fill_in "task[title]", with: ""
-          fill_in "task[content]", with: ""
           click_on "create-task"
           expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.title"), message: I18n.t("errors.messages.blank"))
           expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.content"), message: I18n.t("errors.messages.blank"))
+          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.deadline_on"), message: I18n.t("errors.messages.blank"))
+          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.priority"), message: I18n.t("errors.messages.blank"))
+          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.status"), message: I18n.t("errors.messages.blank"))
         end
       end
     end
 
     context '編集画面' do
-      context 'タイトルが空の場合' do
-        it 'Titleのエラーメッセージが表示される' do
-          visit new_task_path
-          fill_in "task[title]", with: ""
-          fill_in "task[content]", with: "Buy a milk at supermarket"
-          click_on "create-task"
-          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.title"), message: I18n.t("errors.messages.blank"))
-        end
-      end
-
-      context '内容が空の場合' do
-        it 'Contentのエラーメッセージが表示される' do
-          visit new_task_path
-          fill_in "task[title]", with: "Buy a milk"
-          fill_in "task[content]", with: ""
-          click_on "create-task"
-          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.content"), message: I18n.t("errors.messages.blank"))
-        end
-      end
-
-      context 'タイトルと内容が空の場合' do
-        it 'TitleとContentのエラーメッセージが表示される' do
-          visit new_task_path
+      context 'すべて空欄で登録しようとした場合' do
+        it 'すべてのフィールドに対してエラーメッセージが表示される' do
+          task = FactoryBot.create(:task)
+          visit edit_task_path(task.id)
+          
           fill_in "task[title]", with: ""
           fill_in "task[content]", with: ""
-          click_on "create-task"
+          fill_in "task[deadline_on]", with: ""
+          select "", from: "task[priority]"
+          select "", from: "task[status]"
+
+          click_on "update-task"
+          
           expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.title"), message: I18n.t("errors.messages.blank"))
           expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.content"), message: I18n.t("errors.messages.blank"))
+          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.deadline_on"), message: I18n.t("errors.messages.blank"))
+          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.priority"), message: I18n.t("errors.messages.blank"))
+          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.status"), message: I18n.t("errors.messages.blank"))
         end
       end
     end
@@ -320,6 +331,9 @@ RSpec.describe 'タスク管理機能', type: :system do
         visit new_task_path
         fill_in "task[title]", with: "Buy a milk"
         fill_in "task[content]", with: "Buy a milk at a supermarket"
+        fill_in "task[deadline_on]", with: "20251231\t" # "2025-12-31"
+        select I18n.t("enums.task.priority.medium"), from: "task[priority]"
+        select I18n.t("enums.task.status.in_progress"), from: "task[status]"
         click_on I18n.t("helpers.submit.create", model: "Task")
 
         expect(page).to have_text I18n.t("tasks.create.created")
@@ -422,6 +436,110 @@ RSpec.describe 'タスク管理機能', type: :system do
         end
       end
     end
+
+    describe 'ソート機能' do
+      context 'パラメータなしの場合' do
+        let!(:first_task) { FactoryBot.create(:task, title: 'first_task', created_at: Time.zone.now) }
+        let!(:second_task) { FactoryBot.create(:task, title: 'second_task', created_at: 1.day.from_now) }
+        let!(:third_task) { FactoryBot.create(:task, title: 'third_task', created_at: 1.day.ago) }
+
+        it '作成日の新しい順に表示される' do
+          visit tasks_path
+          within "#tasks-table" do
+            task_titles = all(".task-title").map(&:text)
+            expect(task_titles).to eq %w(second_task first_task third_task)
+          end
+        end
+      end
+
+      context '「終了期限」というリンクをクリックした場合' do
+        let!(:first_task) { FactoryBot.create(:task, title: 'first_task', deadline_on: Time.zone.now) }
+        let!(:second_task) { FactoryBot.create(:task, title: 'second_task', deadline_on: 1.day.from_now) }
+        let!(:third_task) { FactoryBot.create(:task, title: 'third_task', deadline_on: 1.day.ago) }
+
+        it '終了期限昇順に並び替えられたタスク一覧が表示される' do
+          visit tasks_path
+          click_on "終了期限"
+          sleep 0.2
+          expect(page).to have_current_path "#{tasks_path}?sort_deadline_on=true"
+          within "#tasks-table" do
+            task_titles = all(".task-title").map(&:text)
+            expect(task_titles).to eq %w(third_task first_task second_task)
+          end
+        end
+      end
+
+      context '「優先度」というリンクをクリックした場合' do
+        let!(:first_task) { FactoryBot.create(:task, title: 'first_task', priority: 0) } # low
+        let!(:second_task) { FactoryBot.create(:task, title: 'second_task', priority: 1) } # medium
+        let!(:third_task) { FactoryBot.create(:task, title: 'third_task', priority: 2) } # high
+
+        it '優先度の高い順に並び替えられたタスク一覧が表示される' do
+          visit tasks_path
+          click_on "優先度"
+          sleep 0.2
+          expect(page).to have_current_path "#{tasks_path}?sort_priority=true"
+          within "#tasks-table" do
+            task_titles = all(".task-title").map(&:text)
+            expect(task_titles).to eq %w(third_task second_task first_task)
+          end
+        end
+      end
+    end
+  
+    describe '検索機能' do
+      context 'タイトルであいまい検索をした場合' do
+        include_context "Create sample tasks"
+
+        it "検索ワードを含むタスクのみ表示される" do
+          visit tasks_path
+          fill_in "search[title]", with: "LinkedIn"
+          click_on "search_task"
+          sleep 0.2
+          within "#tasks-table" do
+            task_titles = all(".task-title").map(&:text)
+            expect(task_titles).to include(linkedin_task.title)
+            expect(task_titles).not_to include(resume_task.title, research_task.title, apply_task.title)
+            expect(task_titles.length).to eq 1
+          end
+        end
+      end
+
+      context 'ステータスで検索した場合' do
+        include_context "Create sample tasks"
+
+        it "検索したステータスに一致するタスクのみ表示される" do
+          visit tasks_path
+          select I18n.t("enums.task.status.not_started"), from: "search[status]"
+          click_on "search_task"
+          sleep 0.2
+          within "#tasks-table" do
+            task_titles = all(".task-title").map(&:text)
+            expect(task_titles).to include(resume_task.title)
+            expect(task_titles).not_to include(linkedin_task.title, research_task.title, apply_task.title)
+            expect(task_titles.length).to eq 1
+          end
+        end
+      end
+
+      context 'タイトルとステータスで検索した場合' do
+        include_context "Create sample tasks"
+
+        it "検索ワードをタイトルに含み、かつステータスに一致するタスクのみ表示される" do
+          visit tasks_path
+          fill_in "search[title]", with: "companies"
+          select I18n.t("enums.task.status.completed"), from: "search[status]"
+          click_on "search_task"
+          sleep 0.2
+          within "#tasks-table" do
+            task_titles = all(".task-title").map(&:text)
+            expect(task_titles).to include(research_task.title)
+            expect(task_titles).not_to include(resume_task.title, linkedin_task.title, apply_task.title)
+            expect(task_titles.length).to eq 1
+          end
+        end
+      end
+    end 
   end
 
   describe '詳細表示機能' do
