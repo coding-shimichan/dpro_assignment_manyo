@@ -299,37 +299,6 @@ RSpec.describe 'タスク管理機能', type: :system do
           expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.status"), message: I18n.t("errors.messages.blank"))
         end
       end
-
-      context 'タイトルが空の場合' do
-        it 'Titleのエラーメッセージが表示される' do
-          visit new_task_path
-          fill_in "task[title]", with: ""
-          fill_in "task[content]", with: "Buy a milk at supermarket"
-          click_on "create-task"
-          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.title"), message: I18n.t("errors.messages.blank"))
-        end
-      end
-
-      context '内容が空の場合' do
-        it 'Contentのエラーメッセージが表示される' do
-          visit new_task_path
-          fill_in "task[title]", with: "Buy a milk"
-          fill_in "task[content]", with: ""
-          click_on "create-task"
-          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.content"), message: I18n.t("errors.messages.blank"))
-        end
-      end
-
-      context 'タイトルと内容が空の場合' do
-        it 'TitleとContentのエラーメッセージが表示される' do
-          visit new_task_path
-          fill_in "task[title]", with: ""
-          fill_in "task[content]", with: ""
-          click_on "create-task"
-          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.title"), message: I18n.t("errors.messages.blank"))
-          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.content"), message: I18n.t("errors.messages.blank"))
-        end
-      end
     end
 
     context '編集画面' do
@@ -351,37 +320,6 @@ RSpec.describe 'タスク管理機能', type: :system do
           expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.deadline_on"), message: I18n.t("errors.messages.blank"))
           expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.priority"), message: I18n.t("errors.messages.blank"))
           expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.status"), message: I18n.t("errors.messages.blank"))
-        end
-      end
-
-      context 'タイトルが空の場合' do
-        it 'Titleのエラーメッセージが表示される' do
-          visit new_task_path
-          fill_in "task[title]", with: ""
-          fill_in "task[content]", with: "Buy a milk at supermarket"
-          click_on "create-task"
-          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.title"), message: I18n.t("errors.messages.blank"))
-        end
-      end
-
-      context '内容が空の場合' do
-        it 'Contentのエラーメッセージが表示される' do
-          visit new_task_path
-          fill_in "task[title]", with: "Buy a milk"
-          fill_in "task[content]", with: ""
-          click_on "create-task"
-          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.content"), message: I18n.t("errors.messages.blank"))
-        end
-      end
-
-      context 'タイトルと内容が空の場合' do
-        it 'TitleとContentのエラーメッセージが表示される' do
-          visit new_task_path
-          fill_in "task[title]", with: ""
-          fill_in "task[content]", with: ""
-          click_on "create-task"
-          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.title"), message: I18n.t("errors.messages.blank"))
-          expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.content"), message: I18n.t("errors.messages.blank"))
         end
       end
     end
