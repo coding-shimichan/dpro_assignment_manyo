@@ -22,6 +22,8 @@ en:
     destroy: Destroy
     confirm: Are you sure?
     back: Back
+    submit:
+      search: Search
   tasks:
     index:
       title: Tasks Index Page

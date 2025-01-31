@@ -30,6 +30,7 @@ ja:
     show: 詳細
     edit: 編集
     destroy: 削除
+    search: 検索
     confirm: "本当に削除してもよろしいですか？"
     back: 戻る
   tasks:
