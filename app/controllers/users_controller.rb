@@ -1,10 +1,7 @@
 class UsersController < ApplicationController
   skip_before_action :login_required, only: [:new, :create]
   before_action :logout_required, only: [:new, :create]
-
-  def index
-    @users = User.all
-  end
+  before_action :correct_user, only: [ :show, :edit, :update, :destroy ]
 
   def new
     @user = User.new
@@ -52,5 +49,12 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation, :admin)
+  end
+
+  def correct_user
+    if (current_user?(User.find(params[:id])) == false)
+      flash[:alert] = t("errors.messages.incorrect_user")
+      redirect_to tasks_path
+    end
   end
 end
