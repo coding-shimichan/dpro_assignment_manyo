@@ -4,7 +4,7 @@ class User < ApplicationRecord
   
   validates :name, presence: true
   validates :email, presence: true, uniqueness: { message: I18n.t("errors.messages.email_taken") }
-  validates :password, length: { minimum: 6 }
+  validates :password, presence: true, length: { minimum: 6 }
 
   # Hooks
   before_save :downcase_email
