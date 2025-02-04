@@ -104,7 +104,7 @@ ja:
       update:
         updated: ユーザを更新しました
       destroy:
-        destroyed: ユーザを更新しました
+        destroyed: ユーザを削除しました
   tasks:
     index:
       title: タスク一覧ページ
