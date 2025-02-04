@@ -7,7 +7,7 @@ class User < ApplicationRecord
   validates :password, presence: true, length: { minimum: 6 }
 
   # Hooks
-  before_save :downcase_email
+  before_validation :downcase_email
   before_destroy :prevent_last_admin_deletion
   before_update :prevent_last_admin_removal
 
