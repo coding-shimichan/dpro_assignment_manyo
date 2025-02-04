@@ -1,0 +1,19 @@
+<%= form_with(scope: :search, method: :get, local: true) do |form| %>
+  <div class="field">
+    <%= form.label :status, t('activerecord.attributes.task.status') %>
+    <%= form.select :status,
+          options_for_select(Task.statuses.keys.map { |p| [t("enums.task.status.#{p}"), p]}),
+          { include_blank: true } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :title, t('activerecord.attributes.task.title') %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="actions">
+    <% button_label = t('helpers.search') %>
+    <% button_id = "search_task" %>
+    <%= form.submit button_label, id: button_id %>
+  </div>
+<% end %>
