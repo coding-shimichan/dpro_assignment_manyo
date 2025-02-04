@@ -1,15 +1,24 @@
 require 'rails_helper'
 
 RSpec.describe 'タスク管理機能', type: :system do
+  let!(:user) {FactoryBot.create(:user)}
+
   shared_context "Create sample tasks" do
-    let!(:resume_task) { FactoryBot.create(:resume_task) }
-    let!(:linkedin_task) { FactoryBot.create(:linkedin_task) }
-    let!(:research_task) { FactoryBot.create(:research_task) }
-    let!(:apply_task) { FactoryBot.create(:apply_task) }
+    let!(:resume_task) { FactoryBot.create(:resume_task, user_id: user.id) }
+    let!(:linkedin_task) { FactoryBot.create(:linkedin_task, user_id: user.id) }
+    let!(:research_task) { FactoryBot.create(:research_task, user_id: user.id) }
+    let!(:apply_task) { FactoryBot.create(:apply_task, user_id: user.id) }
   end
 
   describe 'グローバルナビゲーション' do
     context '一覧画面に遷移した場合' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
       it 'グローバルナビゲーションが表示される' do
         visit tasks_path
         expect(page).to have_content I18n.t("defaults.navigations.tasks")
@@ -20,6 +29,13 @@ RSpec.describe 'タスク管理機能', type: :system do
 
   describe '画面遷移' do
     context 'root' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
       it '一覧画面が表示される' do
         visit root_path
         expect(page).to have_selector "h1", text: I18n.t("tasks.index.title")
@@ -27,6 +43,13 @@ RSpec.describe 'タスク管理機能', type: :system do
     end
 
     context 'グローバルナビゲーション' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
       it '"Tasks Index"をクリックすると一覧画面が表示される' do
         visit new_task_path
         click_on I18n.t("defaults.navigations.tasks")
@@ -43,8 +66,15 @@ RSpec.describe 'タスク管理機能', type: :system do
     end
   
     context '一覧画面' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
       it '"Show"をクリックすると詳細画面が表示される' do
-        task = FactoryBot.create(:task)
+        task = FactoryBot.create(:task, user_id: user.id)
         visit tasks_path
         click_on I18n.t("helpers.show")
         expect(current_path).to eq task_path(task.id)
@@ -52,7 +82,7 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
 
       it '"Edit"をクリックすると編集画面が表示される' do
-        task = FactoryBot.create(:task)
+        task = FactoryBot.create(:task, user_id: user.id)
         visit tasks_path
         click_on I18n.t("helpers.edit")
         expect(current_path).to eq edit_task_path(task.id)
@@ -60,7 +90,7 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
 
       it '"Destroy"をクリックすると一覧画面が表示される' do
-        task = FactoryBot.create(:task)
+        task = FactoryBot.create(:task, user_id: user.id)
         visit tasks_path
         page.accept_confirm(I18n.t("helpers.confirm")) do
           click_on I18n.t("helpers.destroy")
@@ -71,8 +101,15 @@ RSpec.describe 'タスク管理機能', type: :system do
     end
 
     context '詳細画面' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
       it '"Edit"をクリックすると編集画面が表示される' do
-        task = FactoryBot.create(:task)
+        task = FactoryBot.create(:task, user_id: user.id)
         visit task_path(task.id)
         click_on "edit-task"
 
@@ -81,7 +118,7 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
 
       it '"Back"をクリックすると一覧画面が表示される' do
-        task = FactoryBot.create(:task)
+        task = FactoryBot.create(:task, user_id: user.id)
         visit task_path(task.id)
         click_on I18n.t("helpers.back")
 
@@ -92,8 +129,15 @@ RSpec.describe 'タスク管理機能', type: :system do
 
     context '編集画面' do
       context '"Update Task"' do
+        before do
+          visit new_session_path
+          fill_in "session[email]", with: user.email
+          fill_in "session[password]", with: user.password
+          click_on "create-session"
+        end
+  
         it '成功すると詳細画面が表示される' do
-          task = FactoryBot.create(:task)
+          task = FactoryBot.create(:task, user_id: user.id)
           visit edit_task_path(task.id)
           fill_in "task[title]", with: "Modified title"
           click_on "update-task"
@@ -102,26 +146,36 @@ RSpec.describe 'タスク管理機能', type: :system do
         end
 
         it '失敗すると編集画面が表示される' do
-          task = FactoryBot.create(:task)
+          task = FactoryBot.create(:task, user_id: user.id)
           visit edit_task_path(task.id)
           fill_in "task[title]", with: ""
           click_on "update-task"
 
           expect(page).to have_selector "h1", text: I18n.t("tasks.edit.title")
         end
-      end
-
-      it '"Back"を押すと一覧画面が表示される' do
-        task = FactoryBot.create(:task)
-        visit edit_task_path(task.id)
-        click_on I18n.t("helpers.back")
-
-        expect(current_path).to eq tasks_path
-        expect(page).to have_selector "h1", text: I18n.t("tasks.index.title")
+        
+        it '"Back"を押すと一覧画面が表示される' do
+          puts user.email
+          puts user.id
+  
+          task = FactoryBot.create(:task, user_id: user.id)
+          visit edit_task_path(task.id)
+          click_on I18n.t("helpers.back")
+  
+          expect(current_path).to eq tasks_path
+          expect(page).to have_selector "h1", text: I18n.t("tasks.index.title")
+        end
       end
     end
 
     context '登録画面' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
       context '"Create Task"' do
         it '登録に成功した場合一覧画面が表示される' do
           visit new_task_path
@@ -147,6 +201,13 @@ RSpec.describe 'タスク管理機能', type: :system do
 
   describe 'タスク一覧画面' do
     context '一覧画面に遷移した場合' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
       it '画面タイトルが表示される' do
         visit tasks_path
         expect(page).to have_selector "h1", text: I18n.t("tasks.index.title")
@@ -163,7 +224,7 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
 
       it '属性とShow/Edit/Destroyのリンクが表示される' do
-        task = FactoryBot.create(:task)
+        task = FactoryBot.create(:task, user_id: user.id)
 
         visit tasks_path
         expect(page).to have_selector "td", text: task.title, class: "task-title"
@@ -181,6 +242,13 @@ RSpec.describe 'タスク管理機能', type: :system do
 
   describe 'タスク登録画面' do
     context 'タスク登録画面に遷移した場合' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
       it '画面タイトルが表示される' do
         visit new_task_path
         expect(page).to have_selector "h1", text: I18n.t("tasks.new.title")
@@ -214,15 +282,22 @@ RSpec.describe 'タスク管理機能', type: :system do
   
   describe 'タスク詳細画面' do
     context 'タスク詳細画面に遷移した場合' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
       it '画面タイトルが表示される' do
-        task = FactoryBot.create(:task)
+        task = FactoryBot.create(:task, user_id: user.id)
         visit task_path(task.id)
 
         expect(page).to have_selector "h1", text: I18n.t("tasks.show.title")
       end
 
       it '項目名が表示される' do
-        task = FactoryBot.create(:task)
+        task = FactoryBot.create(:task, user_id: user.id)
         visit task_path(task.id)
         
         expect(page).to have_content I18n.t("activerecord.attributes.task.title")
@@ -236,7 +311,7 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
 
       it '編集画面、タスク一覧画面へのリンクが表示される' do
-        task = FactoryBot.create(:task)
+        task = FactoryBot.create(:task, user_id: user.id)
         visit task_path(task.id)
         
         expect(page).to have_selector "a", text: I18n.t("helpers.edit"), id: "edit-task"
@@ -247,15 +322,22 @@ RSpec.describe 'タスク管理機能', type: :system do
 
   describe 'タスク編集画面' do
     context 'タスク編集画面に遷移した場合' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
       it '画面タイトルが表示される' do
-        task = FactoryBot.create(:task)
+        task = FactoryBot.create(:task, user_id: user.id)
         visit edit_task_path(task.id)
 
         expect(page).to have_selector "h1", text: I18n.t("tasks.edit.title")
       end
 
       it 'フォームラベルとフィールドが表示される' do
-        task = FactoryBot.create(:task)
+        task = FactoryBot.create(:task, user_id: user.id)
         visit edit_task_path(task.id)
         
         expect(page).to have_selector "label", text: I18n.t("activerecord.attributes.task.title")
@@ -271,14 +353,14 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
 
       it '更新ボタンが表示される' do
-        task = FactoryBot.create(:task)
+        task = FactoryBot.create(:task, user_id: user.id)
         visit edit_task_path(task.id)
 
         expect(page).to have_button I18n.t("helpers.submit.update", model: "Task"), id: "update-task"
       end
 
       it '戻るリンクが表示される' do
-        task = FactoryBot.create(:task)
+        task = FactoryBot.create(:task, user_id: user.id)
         visit edit_task_path(task.id)
         
         expect(page).to have_selector "a", text: I18n.t("helpers.back"), id: "back"
@@ -289,7 +371,14 @@ RSpec.describe 'タスク管理機能', type: :system do
   describe 'バリデーションエラーメッセージ' do
     context '登録画面' do
       context 'すべて空欄で登録しようとした場合' do
-        it 'すべてのフィールドに対してエラーメッセージが表示される' do
+        before do
+          visit new_session_path
+          fill_in "session[email]", with: user.email
+          fill_in "session[password]", with: user.password
+          click_on "create-session"
+        end
+  
+          it 'すべてのフィールドに対してエラーメッセージが表示される' do
           visit new_task_path
           click_on "create-task"
           expect(page).to have_content I18n.t("errors.format", attribute: I18n.t("activerecord.attributes.task.title"), message: I18n.t("errors.messages.blank"))
@@ -303,8 +392,15 @@ RSpec.describe 'タスク管理機能', type: :system do
 
     context '編集画面' do
       context 'すべて空欄で登録しようとした場合' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
         it 'すべてのフィールドに対してエラーメッセージが表示される' do
-          task = FactoryBot.create(:task)
+          task = FactoryBot.create(:task, user_id: user.id)
           visit edit_task_path(task.id)
           
           fill_in "task[title]", with: ""
@@ -327,6 +423,13 @@ RSpec.describe 'タスク管理機能', type: :system do
 
   describe 'フラッシュメッセージ' do
     context 'タスクの登録に成功した場合' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
       it '登録のフラッシュメッセージが表示される' do
         visit new_task_path
         fill_in "task[title]", with: "Buy a milk"
@@ -341,8 +444,15 @@ RSpec.describe 'タスク管理機能', type: :system do
     end
 
     context 'タスクの更新に成功した場合' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
       it '更新のフラッシュメッセージが表示される' do
-        task = FactoryBot.create(:task)
+        task = FactoryBot.create(:task, user_id: user.id)
         visit edit_task_path(task.id)
         fill_in "task[title]", with: "modified title"
         click_on I18n.t("helpers.submit.update", model: "Task")
@@ -352,8 +462,15 @@ RSpec.describe 'タスク管理機能', type: :system do
     end
 
     context 'タスクを削除した場合' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
       it '削除のフラッシュメッセージが表示される' do
-        task = FactoryBot.create(:task)
+        task = FactoryBot.create(:task, user_id: user.id)
         visit tasks_path
 
         page.accept_confirm(I18n.t("helpers.confirm")) do
@@ -367,8 +484,15 @@ RSpec.describe 'タスク管理機能', type: :system do
 
   describe '登録機能' do
     context 'タスクを登録した場合' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
       it '登録したタスクが表示される' do
-        FactoryBot.create(:task)
+        FactoryBot.create(:task, user_id: user.id)
 
         visit tasks_path
         expect(page).to have_content I18n.t("tasks.index.title")
@@ -379,9 +503,16 @@ RSpec.describe 'タスク管理機能', type: :system do
 
   describe '一覧表示機能' do
     context '一覧画面に遷移した場合' do
-      let!(:first_task) { FactoryBot.create(:task, title: 'first_task', created_at: Time.zone.now) }
-      let!(:second_task) { FactoryBot.create(:task, title: 'second_task', created_at: 1.day.from_now) }
-      let!(:third_task) { FactoryBot.create(:task, title: 'third_task', created_at: 1.day.ago) }
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
+      let!(:first_task) { FactoryBot.create(:task, title: 'first_task', created_at: Time.zone.now, user_id: user.id) }
+      let!(:second_task) { FactoryBot.create(:task, title: 'second_task', created_at: 1.day.from_now, user_id: user.id) }
+      let!(:third_task) { FactoryBot.create(:task, title: 'third_task', created_at: 1.day.ago, user_id: user.id) }
 
       before do
         visit tasks_path
@@ -396,7 +527,7 @@ RSpec.describe 'タスク管理機能', type: :system do
 
       context '新たにタスクを作成した場合' do
         it '新しいタスクが一番上に表示される' do
-          new_task = FactoryBot.create(:task, title: "forth_task", created_at: 2.day.from_now)
+          new_task = FactoryBot.create(:task, title: "forth_task", created_at: 2.day.from_now, user_id: user.id)
           
           visit tasks_path
           within "#tasks-table" do
@@ -408,7 +539,7 @@ RSpec.describe 'タスク管理機能', type: :system do
 
       context 'タスクの作成日時の表示' do
         it '日時のフォーマットが適用されている' do
-          fifth_task = FactoryBot.create(:task, title: "fifth_task", created_at: 10.days.from_now)
+          fifth_task = FactoryBot.create(:task, title: "fifth_task", created_at: 10.days.from_now, user_id: user.id)
           visit tasks_path
           task_created_at = all(".task-created-at").map(&:text).first
           expect(task_created_at).to eq I18n.l(fifth_task.created_at, format: :long)
@@ -418,7 +549,7 @@ RSpec.describe 'タスク管理機能', type: :system do
       context 'ページネーション' do
         it '1ページに10件のタスクが表示される' do
           50.times do |n|
-            FactoryBot.create(:task, title: "Task #{n}")
+            FactoryBot.create(:task, title: "Task #{n}", user_id: user.id)
           end
 
           visit tasks_path
@@ -428,7 +559,7 @@ RSpec.describe 'タスク管理機能', type: :system do
 
         it 'ページネーションのコントローラが表示される' do
           50.times do |n|
-            FactoryBot.create(:task, title: "Task #{n}")
+            FactoryBot.create(:task, title: "Task #{n}", user_id: user.id)
           end
 
           visit tasks_path
@@ -439,9 +570,16 @@ RSpec.describe 'タスク管理機能', type: :system do
 
     describe 'ソート機能' do
       context 'パラメータなしの場合' do
-        let!(:first_task) { FactoryBot.create(:task, title: 'first_task', created_at: Time.zone.now) }
-        let!(:second_task) { FactoryBot.create(:task, title: 'second_task', created_at: 1.day.from_now) }
-        let!(:third_task) { FactoryBot.create(:task, title: 'third_task', created_at: 1.day.ago) }
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
+        let!(:first_task) { FactoryBot.create(:task, title: 'first_task', created_at: Time.zone.now, user_id: user.id) }
+        let!(:second_task) { FactoryBot.create(:task, title: 'second_task', created_at: 1.day.from_now, user_id: user.id) }
+        let!(:third_task) { FactoryBot.create(:task, title: 'third_task', created_at: 1.day.ago, user_id: user.id) }
 
         it '作成日の新しい順に表示される' do
           visit tasks_path
@@ -453,9 +591,16 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
 
       context '「終了期限」というリンクをクリックした場合' do
-        let!(:first_task) { FactoryBot.create(:task, title: 'first_task', deadline_on: Time.zone.now) }
-        let!(:second_task) { FactoryBot.create(:task, title: 'second_task', deadline_on: 1.day.from_now) }
-        let!(:third_task) { FactoryBot.create(:task, title: 'third_task', deadline_on: 1.day.ago) }
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
+        let!(:first_task) { FactoryBot.create(:task, title: 'first_task', deadline_on: Time.zone.now, user_id: user.id) }
+        let!(:second_task) { FactoryBot.create(:task, title: 'second_task', deadline_on: 1.day.from_now, user_id: user.id) }
+        let!(:third_task) { FactoryBot.create(:task, title: 'third_task', deadline_on: 1.day.ago, user_id: user.id) }
 
         it '終了期限昇順に並び替えられたタスク一覧が表示される' do
           visit tasks_path
@@ -470,9 +615,16 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
 
       context '「優先度」というリンクをクリックした場合' do
-        let!(:first_task) { FactoryBot.create(:task, title: 'first_task', priority: 0) } # low
-        let!(:second_task) { FactoryBot.create(:task, title: 'second_task', priority: 1) } # medium
-        let!(:third_task) { FactoryBot.create(:task, title: 'third_task', priority: 2) } # high
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
+        let!(:first_task) { FactoryBot.create(:task, title: 'first_task', priority: 0, user_id: user.id) } # low
+        let!(:second_task) { FactoryBot.create(:task, title: 'second_task', priority: 1, user_id: user.id) } # medium
+        let!(:third_task) { FactoryBot.create(:task, title: 'third_task', priority: 2, user_id: user.id) } # high
 
         it '優先度の高い順に並び替えられたタスク一覧が表示される' do
           visit tasks_path
@@ -489,6 +641,13 @@ RSpec.describe 'タスク管理機能', type: :system do
   
     describe '検索機能' do
       context 'タイトルであいまい検索をした場合' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
         include_context "Create sample tasks"
 
         it "検索ワードを含むタスクのみ表示される" do
@@ -506,6 +665,13 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
 
       context 'ステータスで検索した場合' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
         include_context "Create sample tasks"
 
         it "検索したステータスに一致するタスクのみ表示される" do
@@ -523,6 +689,13 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
 
       context 'タイトルとステータスで検索した場合' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
         include_context "Create sample tasks"
 
         it "検索ワードをタイトルに含み、かつステータスに一致するタスクのみ表示される" do
@@ -544,8 +717,15 @@ RSpec.describe 'タスク管理機能', type: :system do
 
   describe '詳細表示機能' do
     context '任意のタスク詳細画面に遷移した場合' do
+      before do
+        visit new_session_path
+        fill_in "session[email]", with: user.email
+        fill_in "session[password]", with: user.password
+        click_on "create-session"
+      end
+
       it 'そのタスクの内容が表示される' do
-        task = FactoryBot.create(:task)
+        task = FactoryBot.create(:task, user_id: user.id)
 
         visit task_path(task.id)
         expect(page).to have_content I18n.t("tasks.show.title")
