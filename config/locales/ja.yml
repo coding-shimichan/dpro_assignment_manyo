@@ -29,6 +29,10 @@ ja:
         updated_at: 更新日時
   defaults:
     navigations:
+      sign_up: アカウント登録
+      account_setting: アカウント設定
+      sign_in: ログイン
+      sign_out: ログアウト
       tasks: タスク一覧
       new_task: タスクを登録する
   helpers:
@@ -42,6 +46,9 @@ ja:
   errors:
     messages:
       email_taken: はすでに使用されています
+      login_required: ログインしてください
+      logout_required: ログアウトしてください
+      incorrect_user: アクセス権限がありません
   users:
     index:
       title: ユーザ一覧ページ
