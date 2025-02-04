@@ -16,12 +16,11 @@
           <% if current_user.admin? %>
             <li><%= link_to t("defaults.navigations.users"), admin_users_path, id: "users-index" %></li>
             <li><%= link_to t("defaults.navigations.new_user"), new_admin_user_path, id: "add-user" %></li>
-          <% else %>
+          <% end %>
             <li><%= link_to t("defaults.navigations.tasks"), tasks_path, id: "tasks-index" %></li>
             <li><%= link_to t("defaults.navigations.new_task"), new_task_path, id: "new-task" %></li>
             <li><%= link_to t("defaults.navigations.account_setting"), user_path(current_user.id), id: "account-setting" %></li>
             <li><%= link_to t("defaults.navigations.sign_out"), session_path(current_user.id), method: :delete, id: "sign-out" %></li>
-          <% end %>
         <% else %>
           <li><%= link_to t("defaults.navigations.sign_up"), new_user_path, id: "sign-up" %></li>
           <li><%= link_to t("defaults.navigations.sign_in"), new_session_path, id: "sign-in" %></li>
