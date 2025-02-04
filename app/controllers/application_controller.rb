@@ -17,4 +17,11 @@ class ApplicationController < ActionController::Base
       redirect_to tasks_path
     end
   end
+
+  def admin_privileges_required
+    if (current_user.admin? == false)
+      flash[:alert] = t("errors.messages.admin_privileges_required")
+      redirect_to tasks_path
+    end
+  end
 end

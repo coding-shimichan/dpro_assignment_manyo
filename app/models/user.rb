@@ -9,6 +9,10 @@ class User < ApplicationRecord
   # Hooks
   before_save :downcase_email
 
+  def admin?
+    self.admin
+  end
+
   private
 
   def downcase_email

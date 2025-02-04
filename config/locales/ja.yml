@@ -57,6 +57,7 @@ ja:
       login_required: ログインしてください
       logout_required: ログアウトしてください
       incorrect_user: アクセス権限がありません
+      admin_privileges_required: 管理者以外アクセスできません
   users:
     index:
       title: ユーザ一覧ページ
