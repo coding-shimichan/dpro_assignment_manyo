@@ -13,6 +13,11 @@ ja:
     models:
       task: タスク
     attributes:
+      user:
+        name: 名前
+        email: メールアドレス
+        password: パスワード
+        password_confirmation: パスワード（確認）
       task:
         title: タイトル
         content: 内容
@@ -31,8 +36,28 @@ ja:
     edit: 編集
     destroy: 削除
     search: 検索
+    login: ログイン
     confirm: "本当に削除してもよろしいですか？"
     back: 戻る
+  errors:
+    messages:
+      email_taken: はすでに使用されています
+  users:
+    index:
+      title: ユーザ一覧ページ
+    new:
+      title: アカウント登録ページ
+    show:
+      title: アカウント詳細ページ
+    edit:
+      title: アカウント編集ページ
+    create:
+      created: アカウントを登録しました
+    update:
+      updated: アカウントを更新しました
+      failed: アカウントを更新できませんでした
+    destroy:
+      destroyed: アカウントを削除しました
   tasks:
     index:
       title: タスク一覧ページ
