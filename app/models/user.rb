@@ -3,7 +3,7 @@ class User < ApplicationRecord
   has_secure_password
   
   validates :name, presence: true
-  validates :email, presence: true, uniqueness: true
+  validates :email, presence: true, uniqueness: { message: I18n.t("errors.messages.email_taken") }
   validates :password, length: { minimum: 6 }
 
   # Hooks
