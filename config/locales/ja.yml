@@ -9,10 +9,21 @@ ja:
         not_started: 未着手
         in_progress: 着手中
         completed: 完了
+    user:
+      admin:
+        true: あり
+        false: なし
   activerecord:
     models:
       task: タスク
     attributes:
+      user:
+        name: 名前
+        email: メールアドレス
+        password: パスワード
+        password_confirmation: パスワード（確認）
+        admin: 管理者権限
+        task_count: タスク数
       task:
         title: タイトル
         content: 内容
@@ -22,17 +33,78 @@ ja:
       common:
         created_at: 作成日時
         updated_at: 更新日時
+    errors:
+      models:
+        user:
+          last_admin_deletion: "管理者が0人になるため削除できません"
+          last_admin_removal: "管理者が0人になるため権限を変更できません"
   defaults:
     navigations:
+      sign_up: アカウント登録
+      account_setting: アカウント設定
+      sign_in: ログイン
+      sign_out: ログアウト
       tasks: タスク一覧
       new_task: タスクを登録する
+      users: ユーザ一覧
+      new_user: ユーザを登録する
   helpers:
     show: 詳細
     edit: 編集
     destroy: 削除
     search: 検索
+    login: ログイン
     confirm: "本当に削除してもよろしいですか？"
     back: 戻る
+  errors:
+    messages:
+      email_taken: はすでに使用されています
+      login_required: ログインしてください
+      logout_required: ログアウトしてください
+      incorrect_user: アクセス権限がありません
+      admin_privileges_required: 管理者以外アクセスできません
+      last_admin_deletion: 管理者が0人になるため削除できません
+      last_admin_removal: 管理者が0人になるため権限を変更できません
+  users:
+    index:
+      title: ユーザ一覧ページ
+    new:
+      title: アカウント登録ページ
+    show:
+      title: アカウント詳細ページ
+    edit:
+      title: アカウント編集ページ
+    create:
+      created: アカウントを登録しました
+    update:
+      updated: アカウントを更新しました
+      failed: アカウントを更新できませんでした
+    destroy:
+      destroyed: アカウントを削除しました
+  sessions:
+    new:
+      title: ログインページ
+    create:
+      created: ログインしました
+      failed: メールアドレスまたはパスワードに誤りがあります
+    destroy:
+      destroyed: ログアウトしました
+  admin:
+    users:
+      index:
+        title: ユーザ一覧ページ
+      new:
+        title: ユーザ登録ページ
+      show:
+        title: ユーザ詳細ページ
+      edit:
+        title: ユーザ編集ページ
+      create:
+        created: ユーザを登録しました
+      update:
+        updated: ユーザを更新しました
+      destroy:
+        destroyed: ユーザを削除しました
   tasks:
     index:
       title: タスク一覧ページ

@@ -1,9 +1,10 @@
 class TasksController < ApplicationController
   before_action :set_task, only: %i[ show edit update destroy ]
+  before_action :correct_user, only: [ :show, :edit, :update, :destroy ]
 
   # GET /tasks or /tasks.json
   def index
-    @tasks =Task.search_and_sort(params).page(params[:page])
+    @tasks = current_user.tasks.search_and_sort(params).page(params[:page])
   end
 
   # GET /tasks/1 or /tasks/1.json
@@ -21,7 +22,7 @@ class TasksController < ApplicationController
 
   # POST /tasks or /tasks.json
   def create
-    @task = Task.new(task_params)
+    @task = current_user.tasks.build(task_params)
 
     respond_to do |format|
       if @task.save
@@ -68,6 +69,15 @@ class TasksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def task_params
-      params.require(:task).permit(:title, :content, :deadline_on, :priority, :status)
+      params.require(:task).permit(:title, :content, :deadline_on, :priority, :status, :user_id)
+    end
+
+    def correct_user
+      set_task
+
+      if (current_user?(User.find(@task.user_id)) == false)
+        flash[:alert] = t("errors.messages.incorrect_user")
+        redirect_to tasks_path
+      end
     end
 end
