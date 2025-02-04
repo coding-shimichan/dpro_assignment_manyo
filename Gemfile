@@ -20,7 +20,7 @@ gem 'jbuilder', '~> 2.7'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
-# gem 'bcrypt', '~> 3.1.20'
+gem 'bcrypt', '~> 3.1.20'
 # Use rails-i18n to localize
 gem 'rails-i18n', '~> 6.0' # For Rails 6.x
 # Use kaminari for pagination
