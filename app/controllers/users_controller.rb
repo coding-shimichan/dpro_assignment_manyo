@@ -19,7 +19,6 @@ class UsersController < ApplicationController
         log_in(@user)
         format.html { redirect_to tasks_path }
       else
-        flash[:alert] = "Something went wrong. Please try again later."
         format.html { render :new, status: :unprocessable_entity}
       end
     end
@@ -41,7 +40,6 @@ class UsersController < ApplicationController
         flash[:notice] = t(".updated")
         format.html { redirect_to user_path(@user.id) }
       else
-        flash[:alert] = t(".failed")
         format.html { render :edit, status: :unprocessable_entity}
       end
     end
