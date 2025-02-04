@@ -7,7 +7,7 @@ FactoryBot.define do
     admin { false }
   end
 
-  factory :admin_user do
+  factory :admin_user, class: User do
     name { "Admin User 1" }
     email { "admin.user1@sample.com" }
     password { "password" }
