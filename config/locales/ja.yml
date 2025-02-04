@@ -9,6 +9,10 @@ ja:
         not_started: 未着手
         in_progress: 着手中
         completed: 完了
+    user:
+      admin:
+        true: あり
+        false: なし
   activerecord:
     models:
       task: タスク
@@ -18,6 +22,8 @@ ja:
         email: メールアドレス
         password: パスワード
         password_confirmation: パスワード（確認）
+        admin: 管理者権限
+        task_count: タスク数
       task:
         title: タイトル
         content: 内容
@@ -35,6 +41,8 @@ ja:
       sign_out: ログアウト
       tasks: タスク一覧
       new_task: タスクを登録する
+      users: ユーザ一覧
+      new_user: ユーザを登録する
   helpers:
     show: 詳細
     edit: 編集
@@ -73,6 +81,22 @@ ja:
       failed: メールアドレスまたはパスワードに誤りがあります
     destroy:
       destroyed: ログアウトしました
+  admin:
+    users:
+      index:
+        title: ユーザ一覧ページ
+      new:
+        title: ユーザ登録ページ
+      show:
+        title: ユーザ詳細ページ
+      edit:
+        title: ユーザ編集ページ
+      create:
+        created: ユーザを登録しました
+      update:
+        updated: ユーザを更新しました
+      destroy:
+        destroyed: ユーザを更新しました
   tasks:
     index:
       title: タスク一覧ページ
