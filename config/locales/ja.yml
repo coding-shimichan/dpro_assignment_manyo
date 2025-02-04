@@ -58,6 +58,14 @@ ja:
       failed: アカウントを更新できませんでした
     destroy:
       destroyed: アカウントを削除しました
+  sessions:
+    new:
+      title: ログインページ
+    create:
+      created: ログインしました
+      failed: メールアドレスまたはパスワードに誤りがあります
+    destroy:
+      destroyed: ログアウトしました
   tasks:
     index:
       title: タスク一覧ページ
