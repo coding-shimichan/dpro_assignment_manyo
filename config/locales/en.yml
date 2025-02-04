@@ -12,6 +12,11 @@ en:
       common:
         created_at: Created_at
         updated_at: Updated_at
+    errors:
+      models:
+        user:
+          last_admin_deletion: "Cannot delete the only admin."
+          last_admin_removal: "Cannot remove admin privileges from the last admin."
   defaults:
     navigations:
       tasks: Tasks Index
