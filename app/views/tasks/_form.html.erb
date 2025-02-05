@@ -44,7 +44,7 @@
     <%= form.label :labels, t("activerecord.attributes.task.labels") %>
     <% current_user.labels.all.each do |label| %>
       <div>
-        <%= check_box_tag "task[label_ids][]", label.id, @task.labels.include?(label) %>
+        <%= check_box_tag "task[label_ids][]", label.id, @task.labels.include?(label), id: "task_label_ids_#{label.id}" %>
         <%= label.name %>
       </div>
     <% end %>
