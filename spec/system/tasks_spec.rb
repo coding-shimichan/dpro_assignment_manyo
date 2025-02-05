@@ -570,12 +570,12 @@ RSpec.describe 'タスク管理機能', type: :system do
 
     describe 'ソート機能' do
       context 'パラメータなしの場合' do
-      before do
-        visit new_session_path
-        fill_in "session[email]", with: user.email
-        fill_in "session[password]", with: user.password
-        click_on "create-session"
-      end
+        before do
+          visit new_session_path
+          fill_in "session[email]", with: user.email
+          fill_in "session[password]", with: user.password
+          click_on "create-session"
+        end
 
         let!(:first_task) { FactoryBot.create(:task, title: 'first_task', created_at: Time.zone.now, user_id: user.id) }
         let!(:second_task) { FactoryBot.create(:task, title: 'second_task', created_at: 1.day.from_now, user_id: user.id) }
@@ -591,12 +591,12 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
 
       context '「終了期限」というリンクをクリックした場合' do
-      before do
-        visit new_session_path
-        fill_in "session[email]", with: user.email
-        fill_in "session[password]", with: user.password
-        click_on "create-session"
-      end
+        before do
+          visit new_session_path
+          fill_in "session[email]", with: user.email
+          fill_in "session[password]", with: user.password
+          click_on "create-session"
+        end
 
         let!(:first_task) { FactoryBot.create(:task, title: 'first_task', deadline_on: Time.zone.now, user_id: user.id) }
         let!(:second_task) { FactoryBot.create(:task, title: 'second_task', deadline_on: 1.day.from_now, user_id: user.id) }
@@ -615,12 +615,12 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
 
       context '「優先度」というリンクをクリックした場合' do
-      before do
-        visit new_session_path
-        fill_in "session[email]", with: user.email
-        fill_in "session[password]", with: user.password
-        click_on "create-session"
-      end
+        before do
+          visit new_session_path
+          fill_in "session[email]", with: user.email
+          fill_in "session[password]", with: user.password
+          click_on "create-session"
+        end
 
         let!(:first_task) { FactoryBot.create(:task, title: 'first_task', priority: 0, user_id: user.id) } # low
         let!(:second_task) { FactoryBot.create(:task, title: 'second_task', priority: 1, user_id: user.id) } # medium
@@ -641,12 +641,12 @@ RSpec.describe 'タスク管理機能', type: :system do
   
     describe '検索機能' do
       context 'タイトルであいまい検索をした場合' do
-      before do
-        visit new_session_path
-        fill_in "session[email]", with: user.email
-        fill_in "session[password]", with: user.password
-        click_on "create-session"
-      end
+        before do
+          visit new_session_path
+          fill_in "session[email]", with: user.email
+          fill_in "session[password]", with: user.password
+          click_on "create-session"
+        end
 
         include_context "Create sample tasks"
 
@@ -665,12 +665,12 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
 
       context 'ステータスで検索した場合' do
-      before do
-        visit new_session_path
-        fill_in "session[email]", with: user.email
-        fill_in "session[password]", with: user.password
-        click_on "create-session"
-      end
+        before do
+          visit new_session_path
+          fill_in "session[email]", with: user.email
+          fill_in "session[password]", with: user.password
+          click_on "create-session"
+        end
 
         include_context "Create sample tasks"
 
@@ -689,12 +689,12 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
 
       context 'タイトルとステータスで検索した場合' do
-      before do
-        visit new_session_path
-        fill_in "session[email]", with: user.email
-        fill_in "session[password]", with: user.password
-        click_on "create-session"
-      end
+        before do
+          visit new_session_path
+          fill_in "session[email]", with: user.email
+          fill_in "session[password]", with: user.password
+          click_on "create-session"
+        end
 
         include_context "Create sample tasks"
 
