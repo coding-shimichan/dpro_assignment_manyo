@@ -2,7 +2,6 @@ Rails.application.routes.draw do
   root to: redirect("/tasks")
 
   resources :users, except: [:index]
-  get "/users", to: redirect("/tasks")
 
   namespace :admin do
     resources :users
