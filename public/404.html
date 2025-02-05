@@ -51,19 +51,27 @@
         color: #666;
         box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
       }
+
+      .error-dialog {
+        height: 50%;
+        width: 50%;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+      }
     </style>
   </head>
 
   <body class="rails-default-error-page">
     <!-- This file lives in public/404.html -->
-    <div class="dialog">
+    <div class="error-dialog">
+      <img src="/images/404.png" />
       <div>
-        <h1>The page you were looking for doesn't exist.</h1>
-        <p>You may have mistyped the address or the page may have moved.</p>
+        <p>お探しのページは見つかりません。</p>
       </div>
-      <p>
-        If you are the application owner check the logs for more information.
-      </p>
     </div>
   </body>
 </html>

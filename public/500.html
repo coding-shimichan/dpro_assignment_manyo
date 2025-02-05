@@ -51,18 +51,27 @@
         color: #666;
         box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
       }
+
+      .error-dialog {
+        height: 50%;
+        width: 50%;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+      }
     </style>
   </head>
 
   <body class="rails-default-error-page">
     <!-- This file lives in public/500.html -->
-    <div class="dialog">
+    <div class="error-dialog">
+      <img src="/images/500.png" />
       <div>
-        <h1>We're sorry, but something went wrong.</h1>
+        <p>サーバー内部で何らかのエラーが発生しています。</p>
       </div>
-      <p>
-        If you are the application owner check the logs for more information.
-      </p>
     </div>
   </body>
 </html>
