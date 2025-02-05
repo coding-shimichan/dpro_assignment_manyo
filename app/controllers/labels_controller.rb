@@ -1,7 +1,7 @@
 class LabelsController < ApplicationController
   before_action :set_label, only: [:show, :edit, :update, :destroy]
   def index
-    @labels = Label.all
+    @labels = current_user.labels
   end
 
   def show
@@ -12,7 +12,7 @@ class LabelsController < ApplicationController
   end
 
   def create
-    @label = Label.new(label_params)
+    @label = current_user.labels.build(label_params)
 
     respond_to do |format|
       if @label.save
@@ -59,6 +59,6 @@ class LabelsController < ApplicationController
   end
 
   def label_params
-    params.require(:label).permit(:name)
+    params.require(:label).permit(:name, :user_id)
   end
 end
