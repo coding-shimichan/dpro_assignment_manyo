@@ -19,6 +19,8 @@
           <% end %>
             <li><%= link_to t("defaults.navigations.tasks"), tasks_path, id: "tasks-index" %></li>
             <li><%= link_to t("defaults.navigations.new_task"), new_task_path, id: "new-task" %></li>
+            <li><%= link_to t("defaults.navigations.labels"), labels_path, id: "labels-index" %></li>
+            <li><%= link_to t("defaults.navigations.new_label"), new_label_path, id: "new-label" %></li>
             <li><%= link_to t("defaults.navigations.account_setting"), user_path(current_user.id), id: "account-setting" %></li>
             <li><%= link_to t("defaults.navigations.sign_out"), session_path(current_user.id), method: :delete, id: "sign-out" %></li>
         <% else %>
