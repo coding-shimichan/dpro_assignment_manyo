@@ -712,6 +712,31 @@ RSpec.describe 'タスク管理機能', type: :system do
           end
         end
       end
+
+      context 'ラベルで検索をした場合' do
+        before do
+          visit new_session_path
+          fill_in "session[email]", with: user.email
+          fill_in "session[password]", with: user.password
+          click_on "create-session"
+        end
+
+        it "そのラベルの付いたタスクがすべて表示される" do
+          # toとnot_toのマッチャを使って表示されるものとされないものの両方を確認する
+          label = FactoryBot.create(:label, user_id: user.id)
+          task1 = FactoryBot.create(:resume_task, user_id: user.id)
+          task2 = FactoryBot.create(:linkedin_task, user_id: user.id)
+
+          task1.labels << label
+
+          visit tasks_path
+          select label.name, from: "search[label]"
+          click_on "search_task"
+
+          expect(page).to have_selector "td", text: task1.title
+          expect(page).not_to have_selector "td", text: task2.title
+        end
+      end
     end 
   end
 
