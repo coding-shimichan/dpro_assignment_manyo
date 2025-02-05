@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  root to: redirect("/tasks")
+  root to: "sessions#new", as: :public_root, constraints: lambda {|request| request.session[:user_id].present? == false}
+  root to: "tasks#index", constraints: lambda {|request| request.session[:user_id].present? }
 
   resources :users, except: [:index]
 
