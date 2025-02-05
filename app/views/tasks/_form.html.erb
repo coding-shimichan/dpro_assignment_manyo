@@ -13,17 +13,17 @@
 
   <div class="field form-group">
     <%= form.label :title %>
-    <%= form.text_field :title, class: "form-control w-50" %>
+    <%= form.text_field :title, class: "form-control w-100" %>
   </div>
 
   <div class="field form-group">
     <%= form.label :content %>
-    <%= form.text_area :content, class: "form-control w-50" %>
+    <%= form.text_area :content, class: "form-control w-100" %>
   </div>
 
   <div class="field form-group">
     <%= form.label :deadline_on %>
-    <%= form.date_field :deadline_on, class: "form-control w-50" %>
+    <%= form.date_field :deadline_on, class: "form-control w-100" %>
   </div>
 
   <div class="field form-group">
@@ -31,7 +31,7 @@
     <%= form.select :priority,
           options_for_select(Task.priorities.keys.map { |p| [t("enums.task.priority.#{p}"), p]}, selected: task.persisted? ? task.priority : nil),
           { include_blank: true },
-          class: "form-control w-50" %>
+          class: "form-control w-100" %>
   </div>
 
   <div class="field form-group">
@@ -39,7 +39,7 @@
     <%= form.select :status,
           options_for_select(Task.statuses.keys.map { |p| [t("enums.task.status.#{p}"), p]}, selected: task.persisted? ? task.status : nil),
           { include_blank: true },
-          class: "form-control w-50" %>
+          class: "form-control w-100" %>
   </div>
 
   <div class="field form-group">
