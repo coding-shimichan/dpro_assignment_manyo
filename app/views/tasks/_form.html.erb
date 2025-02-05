@@ -11,41 +11,43 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :title %>
-    <%= form.text_field :title %>
+    <%= form.text_field :title, class: "form-control w-50" %>
   </div>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :content %>
-    <%= form.text_area :content %>
+    <%= form.text_area :content, class: "form-control w-50" %>
   </div>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :deadline_on %>
-    <%= form.date_field :deadline_on %>
+    <%= form.date_field :deadline_on, class: "form-control w-50" %>
   </div>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :priority %>
     <%= form.select :priority,
           options_for_select(Task.priorities.keys.map { |p| [t("enums.task.priority.#{p}"), p]}, selected: task.persisted? ? task.priority : nil),
-          { include_blank: true } %>
+          { include_blank: true },
+          class: "form-control w-50" %>
   </div>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :status %>
     <%= form.select :status,
           options_for_select(Task.statuses.keys.map { |p| [t("enums.task.status.#{p}"), p]}, selected: task.persisted? ? task.status : nil),
-          { include_blank: true } %>
+          { include_blank: true },
+          class: "form-control w-50" %>
   </div>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :labels, t("activerecord.attributes.task.labels") %>
     <% current_user.labels.all.each do |label| %>
-      <div>
-        <%= check_box_tag "task[label_ids][]", label.id, @task.labels.include?(label), id: "task_label_ids_#{label.id}" %>
-        <%= label.name %>
+      <div class="form-check">
+        <%= check_box_tag "task[label_ids][]", label.id, @task.labels.include?(label), id: "task_label_ids_#{label.id}", class: "form-check-input" %>
+        <label for="task_label_ids_<%= label.id %>"><%= label.name %></label>
       </div>
     <% end %>
   </div>
@@ -53,6 +55,6 @@
   <div class="actions">
     <% button_label = task.persisted? ? t('helpers.submit.update', model: "Task") : t('helpers.submit.create', model: "Task") %>
     <% button_id = task.persisted? ? "update-task" : "create-task" %>
-    <%= form.submit button_label, id: button_id %>
+    <%= form.submit button_label, id: button_id, class: "btn btn-primary" %>
   </div>
 <% end %>

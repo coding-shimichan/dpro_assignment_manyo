@@ -5,37 +5,53 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
-    <nav>
-      <ul>
-        <% if logged_in? %>
-          <% if current_user.admin? %>
-            <li><%= link_to t("defaults.navigations.users"), admin_users_path, id: "users-index" %></li>
-            <li><%= link_to t("defaults.navigations.new_user"), new_admin_user_path, id: "add-user" %></li>
-          <% end %>
-            <li><%= link_to t("defaults.navigations.tasks"), tasks_path, id: "tasks-index" %></li>
-            <li><%= link_to t("defaults.navigations.new_task"), new_task_path, id: "new-task" %></li>
-            <li><%= link_to t("defaults.navigations.labels"), labels_path, id: "labels-index" %></li>
-            <li><%= link_to t("defaults.navigations.new_label"), new_label_path, id: "new-label" %></li>
-            <li><%= link_to t("defaults.navigations.account_setting"), user_path(current_user.id), id: "account-setting" %></li>
-            <li><%= link_to t("defaults.navigations.sign_out"), session_path(current_user.id), method: :delete, id: "sign-out" %></li>
-        <% else %>
-          <li><%= link_to t("defaults.navigations.sign_up"), new_user_path, id: "sign-up" %></li>
-          <li><%= link_to t("defaults.navigations.sign_in"), new_session_path, id: "sign-in" %></li>
-        <% end %>
-      </ul>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between">
+      <a class="navbar-brand" href="#">Task App</a>
+      <div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <% if logged_in? %>
+              <% if current_user.admin? %>
+                <li class="nav-item active"><%= link_to t("defaults.navigations.users"), admin_users_path, id: "users-index", class: "nav-link" %></li>
+                <li class="nav-item active"><%= link_to t("defaults.navigations.new_user"), new_admin_user_path, id: "add-user", class: "nav-link" %></li>
+              <% end %>
+                <li class="nav-item active"><%= link_to t("defaults.navigations.tasks"), tasks_path, id: "tasks-index", class: "nav-link" %></li>
+                <li class="nav-item active"><%= link_to t("defaults.navigations.new_task"), new_task_path, id: "new-task", class: "nav-link" %></li>
+                <li class="nav-item active"><%= link_to t("defaults.navigations.labels"), labels_path, id: "labels-index", class: "nav-link" %></li>
+                <li class="nav-item active"><%= link_to t("defaults.navigations.new_label"), new_label_path, id: "new-label", class: "nav-link" %></li>
+                <li class="nav-item active"><%= link_to t("defaults.navigations.account_setting"), user_path(current_user.id), id: "account-setting", class: "nav-link" %></li>
+                <li class="nav-item active"><%= link_to t("defaults.navigations.sign_out"), session_path(current_user.id), method: :delete, id: "sign-out", class: "nav-link" %></li>
+            <% else %>
+              <li class="nav-item active"><%= link_to t("defaults.navigations.sign_up"), new_user_path, id: "sign-up", class: "nav-link" %></li>
+              <li class="nav-item active"><%= link_to t("defaults.navigations.sign_in"), new_session_path, id: "sign-in", class: "nav-link" %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
     </nav>
     
-    <div>
-      <% flash.each do |key, message| %>
-        <%= content_tag :div, message, :id => key %>
-      <% end %>
-    </div>
+    <div class="container mt-2">
+      <div class="mt-3">
+        <% flash.each do |key, message| %>
+          <% flash_class = (key == "notice") ? "alert alert-success" : "alert alert-danger" %>
+          <%= content_tag :div, message, :id => key, class: flash_class %>
+        <% end %>
+      </div>
 
-    <%= yield %>
+      <%= yield %>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   </body>
 </html>

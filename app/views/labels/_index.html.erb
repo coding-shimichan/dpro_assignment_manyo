@@ -1,5 +1,5 @@
 <div id="labels-area">
-  <table id="labels-table">
+  <table id="labels-table" class="table mt-3">
     <thead>
       <tr>
         <th><%= t("activerecord.attributes.label.name") %></th>
@@ -13,8 +13,10 @@
         <tr>
           <td class="label-name"><%= label.name %></td>
           <td class="label-task-count"><%= label.task_count %></td>
-          <td><%= link_to t('helpers.edit'), edit_label_path(label), class: "edit-label" %></td>
-          <td><%= link_to t('helpers.destroy'), label, method: :delete, data: { confirm: t('helpers.confirm') }, class: "destroy-label" %></td>
+          <td>
+            <%= link_to t('helpers.edit'), edit_label_path(label), class: "edit-label text-primary" %>
+            <%= link_to t('helpers.destroy'), label, method: :delete, data: { confirm: t('helpers.confirm') }, class: "destroy-label text-danger" %>
+          </td>
         </tr>
       <% end %>
     </tbody>

@@ -11,14 +11,14 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :name %>
-    <%= form.text_field :name %>
+    <%= form.text_field :name, class: "form-control w-50" %>
   </div>
 
   <div class="actions">
     <% button_label = label.persisted? ? t('helpers.submit.update', model: "label") : t('helpers.submit.create', model: "label") %>
     <% button_id = label.persisted? ? "update-label" : "create-label" %>
-    <%= form.submit button_label, id: button_id %>
+    <%= form.submit button_label, id: button_id, class: "btn btn-primary" %>
   </div>
 <% end %>
