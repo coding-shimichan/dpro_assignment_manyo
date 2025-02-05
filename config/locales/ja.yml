@@ -31,6 +31,7 @@ ja:
         deadline_on: 終了期限
         priority: 優先度
         status: ステータス
+        labels: ラベル
       label:
         name: 名前
         task_count: タスク数

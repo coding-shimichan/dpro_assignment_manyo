@@ -40,6 +40,16 @@
           { include_blank: true } %>
   </div>
 
+  <div class="field">
+    <%= form.label :labels, t("activerecord.attributes.task.labels") %>
+    <% current_user.labels.all.each do |label| %>
+      <div>
+        <%= check_box_tag "task[label_ids][]", label.id, @task.labels.include?(label) %>
+        <%= label.name %>
+      </div>
+    <% end %>
+  </div>
+
   <div class="actions">
     <% button_label = task.persisted? ? t('helpers.submit.update', model: "Task") : t('helpers.submit.create', model: "Task") %>
     <% button_id = task.persisted? ? "update-task" : "create-task" %>
