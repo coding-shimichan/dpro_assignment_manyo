@@ -11,6 +11,13 @@
     <%= form.text_field :title %>
   </div>
 
+  <div class="field">
+    <%= form.label :label, t('activerecord.attributes.task.label') %>
+    <%= form.select :label,
+          options_for_select(current_user.labels.map { |label| [label.name, label.id]}),
+          { include_blank: true } %>
+  </div>
+
   <div class="actions">
     <% button_label = t('helpers.search') %>
     <% button_id = "search_task" %>
