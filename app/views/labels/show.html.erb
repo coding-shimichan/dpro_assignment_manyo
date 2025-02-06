@@ -1,0 +1,9 @@
+<h1><%= t(".title") %></h1>
+
+<p>
+  <strong><%= t("activerecord.attributes.label.name") %></strong>
+  <%= @label.name %>
+</p>
+
+<%= link_to t("helpers.edit"), edit_label_path(@label), id: "edit-label" %> |
+<%= link_to t("helpers.back"), labels_path, id: "back" %>

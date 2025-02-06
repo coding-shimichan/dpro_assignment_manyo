@@ -11,27 +11,27 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :name %>
-    <%= form.text_field :name %>
+    <%= form.text_field :name, class: "form-control w-100" %>
   </div>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :email %>
-    <%= form.text_field :email %>
+    <%= form.text_field :email, class: "form-control w-100" %>
   </div>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :password %>
-    <%= form.text_field :password %>
+    <%= form.text_field :password, class: "form-control w-100" %>
   </div>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :password_confirmation %>
-    <%= form.text_field :password_confirmation %>
+    <%= form.text_field :password_confirmation, class: "form-control w-100" %>
   </div>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :admin %>
     <%= form.check_box :admin %>
   </div>
@@ -39,6 +39,6 @@
   <div class="actions">
     <% button_label = user.persisted? ? t('helpers.submit.update', model: "User") : t('helpers.submit.create', model: "User") %>
     <% button_id = user.persisted? ? "update-user" : "create-user" %>
-    <%= form.submit button_label, id: button_id %>
+    <%= form.submit button_label, id: button_id, class: "btn btn-primary" %>
   </div>
 <% end %>

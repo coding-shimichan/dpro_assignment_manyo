@@ -4,7 +4,11 @@ class TasksController < ApplicationController
 
   # GET /tasks or /tasks.json
   def index
-    @tasks = current_user.tasks.search_and_sort(params).page(params[:page])
+    if (params[:search].present? && params[:search][:label].present?)
+      @tasks = current_user.labels.find(params[:search][:label]).tasks.search_and_sort(params).page(params[:page])
+    else
+      @tasks = current_user.tasks.search_and_sort(params).page(params[:page])
+    end
   end
 
   # GET /tasks/1 or /tasks/1.json
@@ -69,7 +73,7 @@ class TasksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def task_params
-      params.require(:task).permit(:title, :content, :deadline_on, :priority, :status, :user_id)
+      params.require(:task).permit(:title, :content, :deadline_on, :priority, :status, :user_id, label_ids: [])
     end
 
     def correct_user

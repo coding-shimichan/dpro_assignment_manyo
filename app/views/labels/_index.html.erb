@@ -1,0 +1,24 @@
+<div id="labels-area">
+  <table id="labels-table" class="table mt-3">
+    <thead>
+      <tr>
+        <th><%= t("activerecord.attributes.label.name") %></th>
+        <th><%= t("activerecord.attributes.label.task_count") %></th>
+        <th colspan="2"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% labels.each do |label| %>
+        <tr>
+          <td class="label-name"><%= label.name %></td>
+          <td class="label-task-count"><%= label.task_count %></td>
+          <td>
+            <%= link_to t('helpers.edit'), edit_label_path(label), class: "edit-label text-primary" %>
+            <%= link_to t('helpers.destroy'), label, method: :delete, data: { confirm: t('helpers.confirm') }, class: "destroy-label text-danger" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -1,19 +1,29 @@
 <%= form_with(scope: :search, method: :get, local: true) do |form| %>
-  <div class="field">
-    <%= form.label :status, t('activerecord.attributes.task.status') %>
-    <%= form.select :status,
-          options_for_select(Task.statuses.keys.map { |p| [t("enums.task.status.#{p}"), p]}),
-          { include_blank: true } %>
-  </div>
+  <div class="d-flex justify-content-between align-items-end mt-3">
+    <div class="field flex-grow-1">
+      <%= form.label :status, t('activerecord.attributes.task.status') %>
+      <%= form.select :status,
+            options_for_select(Task.statuses.keys.map { |p| [t("enums.task.status.#{p}"), p]}),
+            { include_blank: true },
+            class: "form-control w-100" %>
+    </div>
 
-  <div class="field">
-    <%= form.label :title, t('activerecord.attributes.task.title') %>
-    <%= form.text_field :title %>
-  </div>
+    <div class="field flex-grow-1 mx-2">
+      <%= form.label :title, t('activerecord.attributes.task.title') %>
+      <%= form.text_field :title, class: "form-control w-100" %>
+    </div>
 
-  <div class="actions">
-    <% button_label = t('helpers.search') %>
-    <% button_id = "search_task" %>
-    <%= form.submit button_label, id: button_id %>
+    <div class="field flex-grow-1 mr-2">
+      <%= form.label :label, t('activerecord.attributes.task.label') %>
+      <%= form.select :label,
+            options_for_select(current_user.labels.map { |label| [label.name, label.id]}),
+            { include_blank: true }, class: "form-control w-100" %>
+    </div>
+
+    <div class="actions form-group">
+      <% button_label = t('helpers.search') %>
+      <% button_id = "search_task" %>
+      <%= form.submit button_label, id: button_id, class: "form-control btn btn-primary" %>
+    </div>
   </div>
 <% end %>

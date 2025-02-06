@@ -16,6 +16,7 @@ ja:
   activerecord:
     models:
       task: タスク
+      label: ラベル
     attributes:
       user:
         name: 名前
@@ -30,6 +31,11 @@ ja:
         deadline_on: 終了期限
         priority: 優先度
         status: ステータス
+        label: ラベル
+        labels: ラベル
+      label:
+        name: 名前
+        task_count: タスク数
       common:
         created_at: 作成日時
         updated_at: 更新日時
@@ -46,6 +52,8 @@ ja:
       sign_out: ログアウト
       tasks: タスク一覧
       new_task: タスクを登録する
+      labels: ラベル一覧
+      new_label: ラベルを登録する
       users: ユーザ一覧
       new_user: ユーザを登録する
   helpers:
@@ -120,3 +128,18 @@ ja:
       updated: タスクを更新しました
     destroy:
       destroyed: タスクを削除しました
+  labels:
+    index:
+      title: ラベル一覧ページ
+    new:
+      title: ラベル登録ページ
+    show:
+      title: ラベル詳細ページ
+    edit:
+      title: ラベル編集ページ
+    create:
+      created: ラベルを登録しました
+    update:
+      updated: ラベルを更新しました
+    destroy:
+      destroyed: ラベルを削除しました
